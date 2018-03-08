@@ -60,14 +60,43 @@ int MdlParseFile(char *filename)
 // Вращает модель
 void Rotate(FrameMdlRecord *rec, float ax, float ay, float az)
 {
-	//FILE *file = fopen("debug.txt", "w");
+
 	for (int i = 0; i < rec->N; i++)
 	{		
 		double x = rec->vertexes[i].x;
 		double y = rec->vertexes[i].y;
 		double z = rec->vertexes[i].z;
-	
 
+		y = rec->vertexes[i].y * cos(ax) - rec->vertexes[i].z * sin(ax);
+		z = rec->vertexes[i].y * sin(ax) + rec->vertexes[i].z * cos(ax);
+
+		rec->vertexes[i].x = x;
+		rec->vertexes[i].y = y;
+		rec->vertexes[i].z = z;
+	}
+
+	for (int i = 0; i < rec->N; i++)
+	{
+		double x = rec->vertexes[i].x;
+		double y = rec->vertexes[i].y;
+		double z = rec->vertexes[i].z;
+
+		x = rec->vertexes[i].x * cos(ay) + rec->vertexes[i].z * sin(ay);
+		z = -rec->vertexes[i].x * sin(ay) + rec->vertexes[i].z * cos(ay);
+
+		rec->vertexes[i].x = x;;
+		rec->vertexes[i].y = y;
+		rec->vertexes[i].z = z;
+	}
+
+	for (int i = 0; i < rec->N; i++)
+	{
+		double x = rec->vertexes[i].x;
+		double y = rec->vertexes[i].y;
+		double z = rec->vertexes[i].z;
+
+		x = rec->vertexes[i].x * cos(az) - rec->vertexes[i].y * sin(az);
+		y = rec->vertexes[i].x * sin(az) + rec->vertexes[i].y * cos(az);
 
 		rec->vertexes[i].x = x;;
 		rec->vertexes[i].y = y;
