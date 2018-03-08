@@ -18,12 +18,14 @@ namespace WinFormsTemplate {
 	public ref class MainForm : public System::Windows::Forms::Form
 	{
 	public:
-		MainForm(void)
+		MainForm(String ^filename)
 		{
 			InitializeComponent();
 			//
 			//TODO: добавьте код конструктора
 			//
+			PathBox->Text = filename;
+			LoadFile();
 		}
 
 	protected:
@@ -219,6 +221,7 @@ namespace WinFormsTemplate {
 	private:
 		System::Void LoadButton_Click(System::Object^  sender, System::EventArgs^  e);
 		void DrawProjection();
+		void LoadFile();
 	};
 
 }

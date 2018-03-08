@@ -86,12 +86,7 @@ namespace WinFormsTemplate
 		free(img);
 	}
 
-	System::Void MainForm::ProcessButton_Click(System::Object^  sender, System::EventArgs^  e)
-	{
-		DrawProjection();
-	}
-
-	System::Void MainForm::LoadButton_Click(System::Object^  sender, System::EventArgs^  e)
+	void MainForm::LoadFile()
 	{
 		String ^path = PathBox->Text;
 		char *path_c = str2char(path);
@@ -113,5 +108,15 @@ namespace WinFormsTemplate
 		}
 
 		free(path_c);
+	}
+
+	System::Void MainForm::ProcessButton_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		DrawProjection();
+	}
+
+	System::Void MainForm::LoadButton_Click(System::Object^  sender, System::EventArgs^  e)
+	{
+		LoadFile();
 	}
 }
