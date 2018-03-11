@@ -22,27 +22,28 @@ namespace WinFormsTemplate
 	void MainForm::DrawProjection()
 	{
 		Graphics ^gr = DrawingCanvas->CreateGraphics();
-		Brush ^vertexBrush = gcnew SolidBrush(Color::LightGreen);
-		Brush ^brush = gcnew SolidBrush(Color::Blue);
-		Brush ^blackBrush = gcnew SolidBrush(Color::Black);
+		Brush ^vertexBrush = gcnew SolidBrush(VERTEX_COLOR);
+		Brush ^brush = gcnew SolidBrush(EDGE_COLOR);		
 		Pen ^pen = gcnew Pen(brush);
-		Pen ^blackPen = gcnew Pen(blackBrush);
-		System::Drawing::Font ^font = gcnew System::Drawing::Font("Arial", 14);
-		
 
+#ifdef DRAW_LABELS
+		Brush ^labelBrush = gcnew SolidBrush(LABEL_COLOR);
+		Pen ^labelPen = gcnew Pen(labelBrush);
+		System::Drawing::Font ^font = gcnew System::Drawing::Font(LABEL_FONT_NAME, LABEL_FONT_SIZE);
 		gr->Clear(Color::White);
 		gr->TranslateTransform(DrawingCanvas->Size.Width / 2, DrawingCanvas->Size.Height / 2);
-		gr->DrawLine(blackPen,
+		gr->DrawLine(labelPen,
 			0, -DrawingCanvas->Size.Height / 2,
 			0, DrawingCanvas->Size.Height / 2
 			);
-		gr->DrawLine(blackPen,
+		gr->DrawLine(labelPen,
 			-DrawingCanvas->Size.Width / 2, 0,
 			DrawingCanvas->Size.Width / 2, 0
 			);
 
-		gr->DrawString("X", font, blackBrush, DrawingCanvas->Size.Width / 2 - 20, 0);
-		gr->DrawString("Y", font, blackBrush, 0, -DrawingCanvas->Size.Height / 2 + 10);
+		gr->DrawString("X", font, labelBrush, DrawingCanvas->Size.Width / 2 + X_LABEL_OFFSET, 0);
+		gr->DrawString("Y", font, labelBrush, 0, -DrawingCanvas->Size.Height / 2 + Y_LABEL_OFFSET);
+#endif
 
 		Image2D *img = (Image2D*)malloc(sizeof(Image2D));
 		Double angleX, angleY, angleZ;
@@ -62,8 +63,8 @@ namespace WinFormsTemplate
 			return;
 		}
 
-		Vector3 rot = { DEG2RAD * angleX, DEG2RAD * angleY, DEG2RAD * angleZ };
-		Construct(img, rot, {0, 0, 0});
+		Vector3 rot = { angleX, angleY, angleZ };
+		Construct(img, rot);
 		
 		// Drawing edges
 		for (int i = 0; i < img->edgesCount; i++)
@@ -78,7 +79,7 @@ namespace WinFormsTemplate
 		// Drawing verts
 		for (int i = 0; i < img->vertexCount; i++)
 		{
-			gr->FillEllipse(vertexBrush, img->points[i].x - 2.5, -img->points[i].y - 2.5, 5, 5);
+			gr->FillEllipse(vertexBrush, img->points[i].x - POINT_SIZE / 2, -img->points[i].y - POINT_SIZE / 2, POINT_SIZE, POINT_SIZE);
 		}
 
 		free(img->edges);

@@ -8,9 +8,9 @@
 #include "RotationMatrix.h"
 
 // Global record
-FrameMdlRecord *record = NULL;
+FrameModel *record = NULL;
 
-void FreeRecord(FrameMdlRecord *rec)
+void FreeRecord(FrameModel *rec)
 {
 	free(rec->vertexes);
 	free(rec->edges);
@@ -20,12 +20,18 @@ void FreeRecord(FrameMdlRecord *rec)
 // Загружает информацию о каркасной модели из указанного файла
 int MdlParseFile(char *filename)
 {
+	if (record != NULL)
+	{
+		FreeRecord(record);
+		record = NULL;
+	}
+
 	std::ifstream file = std::ifstream(filename);
 	if (file.is_open() == false)
 	{
 		return ERROR_NO_SUCH_FILE;
 	}
-	record = (FrameMdlRecord*)malloc(sizeof(FrameMdlRecord));
+	record = (FrameModel*)malloc(sizeof(FrameModel));
 	if (record == NULL)
 	{
 		return ERROR_BAD_ALLOC;
@@ -58,7 +64,7 @@ int MdlParseFile(char *filename)
 }
 
 // Вращает модель
-void Rotate(FrameMdlRecord *rec, float ax, float ay, float az)
+void Rotate(FrameModel *rec, float ax, float ay, float az)
 {
 	for (int i = 0; i < rec->N; i++)
 	{		
@@ -86,21 +92,11 @@ void Rotate(FrameMdlRecord *rec, float ax, float ay, float az)
 	}
 }
 
-// Смещает модель
-void Translate(FrameMdlRecord *rec, int x, int y, int z)
-{
-	for (int i = 0; i < record->N; i++)
-	{
-		rec->vertexes[i].x += x;
-		rec->vertexes[i].y += y;
-		rec->vertexes[i].z += z;
-	}
-}
-
+#ifndef RELATIVE_TRANSFORMATION
 // Дублирует данные модели
-FrameMdlRecord *CopyRecord(FrameMdlRecord *rec)
+FrameModel *CopyRecord(FrameModel *rec)
 {
-	FrameMdlRecord *copy = (FrameMdlRecord*)malloc(sizeof(FrameMdlRecord));
+	FrameModel *copy = (FrameModel*)malloc(sizeof(FrameModel));
 	copy->N = record->N;
 	copy->E = record->E;
 	copy->vertexes = (Vertex3D*)malloc(sizeof(Vertex3D) * copy->N);
@@ -115,10 +111,11 @@ FrameMdlRecord *CopyRecord(FrameMdlRecord *rec)
 	}
 	return copy;
 }
+#endif
 
 
 // Применяет трансформации и конструирует проекцию по результату
-void Construct(Image2D* img, Vector3 rot, Vector3 tran)
+void Construct(Image2D* img, Vector3 rot)
 {
 	img->vertexCount = record->N;
 	img->edgesCount = record->E;
@@ -126,12 +123,28 @@ void Construct(Image2D* img, Vector3 rot, Vector3 tran)
 	img->points = (Vertex2D*)malloc(sizeof(Vertex2D)*record->N);
 	img->edges = (Edge*)malloc(sizeof(Edge)*record->E);
 
-	FrameMdlRecord *copy = record;// = CopyRecord(record);	
+#ifdef RELATIVE_TRANSFORMATION
 
-	//Translate(copy, tran.x, tran.y, tran.z);
-	Rotate(record, rot.x, rot.y, rot.z);
+	Rotate(record, DEG2RAD * rot.x, DEG2RAD * rot.y, DEG2RAD * rot.z);
 
-	for (int i = 0; i < copy->N; i++)
+	for (int i = 0; i < record->N; i++)
+	{
+		img->points[i].x = (record->vertexes[i].x);
+		img->points[i].y = (record->vertexes[i].y);
+	}
+
+	for (int i = 0; i < record->E; i++)
+	{
+		img->edges[i].start_index = record->edges[i].start_index;
+		img->edges[i].end_index = record->edges[i].end_index;
+	}
+#else
+
+	FrameModel *copy = CopyRecord(record);
+
+	Rotate(copy, DEG2RAD * rot.x, DEG2RAD * rot.y, DEG2RAD * rot.z);
+
+	for (int i = 0; i < record->N; i++)
 	{
 		img->points[i].x = (copy->vertexes[i].x);
 		img->points[i].y = (copy->vertexes[i].y);
@@ -142,5 +155,14 @@ void Construct(Image2D* img, Vector3 rot, Vector3 tran)
 		img->edges[i].start_index = copy->edges[i].start_index;
 		img->edges[i].end_index = copy->edges[i].end_index;
 	}
-	//FreeRecord(copy);
+
+	FreeRecord(copy);
+#endif
+}
+
+void DisposeFrameModel()
+{
+	if (record != NULL)
+		FreeRecord(record);
+	record = NULL;
 }

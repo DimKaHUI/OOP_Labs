@@ -3,6 +3,17 @@
 #include <stdlib.h>
 #include "FrameMdlProjector.h"
 
+#define POINT_SIZE 5
+#define X_LABEL_OFFSET -20
+#define Y_LABEL_OFFSET 10
+#define LABEL_FONT_SIZE 14
+#define LABEL_FONT_NAME "Arial"
+#define LABEL_COLOR Color::LightGray
+#define DRAW_LABELS
+#define VERTEX_COLOR Color::Red
+#define EDGE_COLOR Color::Black
+
+
 namespace WinFormsTemplate {
 
 	using namespace System;
@@ -13,19 +24,21 @@ namespace WinFormsTemplate {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Сводка для Form1
+	/// Сводка для MainForm
 	/// </summary>
 	public ref class MainForm : public System::Windows::Forms::Form
 	{
 	public:
 		MainForm(String ^filename)
 		{
-			InitializeComponent();
-			//
-			//TODO: добавьте код конструктора
-			//
+			InitializeComponent();			
 			PathBox->Text = filename;
-			LoadFile();
+			//LoadFile();
+		}
+
+		MainForm()
+		{
+			InitializeComponent();
 		}
 
 	protected:
@@ -34,6 +47,7 @@ namespace WinFormsTemplate {
 		/// </summary>
 		~MainForm()
 		{
+			DisposeFrameModel();
 			if (components)
 			{
 				delete components;

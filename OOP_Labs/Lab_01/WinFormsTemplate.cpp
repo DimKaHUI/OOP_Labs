@@ -13,6 +13,9 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault(false); 
 
 	// Создание главного окна и его запуск
-	Application::Run(gcnew MainForm(args[0]));
+	if (args->Length >= 1)
+		Application::Run(gcnew MainForm(args[0]));
+	else
+		Application::Run(gcnew MainForm());
 	return 0;
 }

@@ -7,6 +7,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#define RELATIVE_TRANSFORMATION
+
 #define ERROR_NO_SUCH_FILE -111
 #define ERROR_FILE_PARSING -112
 #define ERROR_BAD_ALLOC -113
@@ -18,7 +20,7 @@ typedef struct Vertex3D
 	float x, y, z;
 };
 
-typedef struct FrameMdlRecord
+typedef struct FrameModel
 {
 	int N;
 	Vertex3D *vertexes;
@@ -35,4 +37,5 @@ typedef struct FrameMdlRecord
  */
 
 int MdlParseFile(char *filename);
-void Construct(Image2D *img, Vector3 rot, Vector3 tran);
+void Construct(Image2D *img, Vector3 rot);
+void DisposeFrameModel();
