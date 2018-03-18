@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdio.h>
-#include "Image2D.h"
 #include <iostream>
 #include <fstream>
 #define _USE_MATH_DEFINES
@@ -35,11 +34,6 @@ typedef struct Image2D
 	Edge *edges;
 };
 
-typedef struct Vector3
-{
-	float x, y, z;
-};
-
 typedef struct Vertex3D
 {
 	float x, y, z;
@@ -58,9 +52,8 @@ typedef struct FrameModel
  * int x, int y, int z [Repeat N] - вершины
  * int E - количество рёбер
  * int i, int j [Repeat E] - рёбра
- *
  */
 
 int MdlParseFile(FrameModel **record, char *filename);
-void Construct(FrameModel *record, Image2D *img, Vector3 rot);
+void Construct(FrameModel *record, Image2D *img, Vertex3D rot, double scale);
 void DisposeFrameModel(FrameModel *record);

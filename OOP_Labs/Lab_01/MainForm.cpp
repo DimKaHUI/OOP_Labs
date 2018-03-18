@@ -21,6 +21,32 @@ namespace WinFormsTemplate
 
 	void MainForm::DrawProjection(FrameModel *model)
 	{
+
+		// Reading from form
+		Image2D *img = (Image2D*)malloc(sizeof(Image2D));
+		Double angleX, angleY, angleZ, scale;
+		if (!Double::TryParse(X_TextBox->Text, angleX))
+		{
+			MessageBox::Show("I/O Error in X argument");
+			return;
+		}
+		if (!Double::TryParse(Y_TextBox->Text, angleY))
+		{
+			MessageBox::Show("I/O Error in Y argument");
+			return;
+		}
+		if (!Double::TryParse(Z_TextBox->Text, angleZ))
+		{
+			MessageBox::Show("I/O Error in Z argument");
+			return;
+		}
+		if (!Double::TryParse(scaleBox->Text, scale))
+		{
+			MessageBox::Show("I/O Error in scale argument");
+			return;
+		}
+		
+		// Drawing variables
 		Graphics ^gr = DrawingCanvas->CreateGraphics();
 		Brush ^vertexBrush = gcnew SolidBrush(VERTEX_COLOR);
 		Brush ^brush = gcnew SolidBrush(EDGE_COLOR);		
@@ -43,28 +69,10 @@ namespace WinFormsTemplate
 
 		gr->DrawString("X", font, labelBrush, DrawingCanvas->Size.Width / 2 + X_LABEL_OFFSET, 0);
 		gr->DrawString("Y", font, labelBrush, 0, -DrawingCanvas->Size.Height / 2 + Y_LABEL_OFFSET);
-#endif
+#endif		
 
-		Image2D *img = (Image2D*)malloc(sizeof(Image2D));
-		Double angleX, angleY, angleZ;
-		if (!Double::TryParse(X_TextBox->Text, angleX))
-		{
-			MessageBox::Show("I/O Error in X argument");
-			return;
-		}
-		if (!Double::TryParse(Y_TextBox->Text, angleY))
-		{
-			MessageBox::Show("I/O Error in Y argument");
-			return;
-		}
-		if (!Double::TryParse(Z_TextBox->Text, angleZ))
-		{
-			MessageBox::Show("I/O Error in Z argument");
-			return;
-		}
-
-		Vector3 rot = { angleX, angleY, angleZ };
-		Construct(model, img, rot);
+		Vertex3D rot = { angleX, angleY, angleZ };
+		Construct(model, img, rot, scale);
 		
 		// Drawing edges
 		for (int i = 0; i < img->edgesCount; i++)
@@ -118,8 +126,9 @@ namespace WinFormsTemplate
 		if (model == NULL || sender == (Object^)LoadButton)
 		{
 			DisposeFrameModel(model);
-			FrameModel *result = LoadFile();
-			model = result;
+			model = LoadFile();
+			if (model != NULL)
+				DrawProjection(model);
 		}
 		else if (sender == (Object^)ProcessButton)
 		{

@@ -3,23 +3,17 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-#include "FrameMdlProjector.h"
 #include <cmath>
-#include "RotationMatrix.h"
 
-void FreeRecord(FrameModel *rec)
-{
-	free(rec->vertexes);
-	free(rec->edges);
-	free(rec);
-}
+#include "FrameMdlProjector.h"
+
 
 // Загружает информацию о каркасной модели из указанного файла
 int MdlParseFile(FrameModel **record, char *filename)
 {
 	if (*record != NULL)
 	{
-		FreeRecord(*record);
+		DisposeFrameModel(*record);
 		*record = NULL;
 	}
 
@@ -110,9 +104,20 @@ FrameModel *CopyRecord(FrameModel *rec)
 }
 #endif
 
+// Однородно масштабирует модель
+void Scale(FrameModel *record, double scale)
+{
+	for (int i = 0; i < record->N; i++)
+	{
+		record->vertexes[i].x *= scale;
+		record->vertexes[i].y *= scale;
+		record->vertexes[i].z *= scale;
+	}
+}
+
 
 // Применяет трансформации и конструирует проекцию по результату
-void Construct(FrameModel *record, Image2D* img, Vector3 rot)
+void Construct(FrameModel *record, Image2D* img, Vertex3D rot, double scale)
 {
 	img->vertexCount = record->N;
 	img->edgesCount = record->E;
@@ -123,6 +128,7 @@ void Construct(FrameModel *record, Image2D* img, Vector3 rot)
 #ifdef RELATIVE_TRANSFORMATION
 
 	Rotate(record, DEG2RAD * rot.x, DEG2RAD * rot.y, DEG2RAD * rot.z);
+	Scale(record, scale);
 
 	for (int i = 0; i < record->N; i++)
 	{
@@ -135,6 +141,9 @@ void Construct(FrameModel *record, Image2D* img, Vector3 rot)
 		img->edges[i].start_index = record->edges[i].start_index;
 		img->edges[i].end_index = record->edges[i].end_index;
 	}
+
+	
+
 #else
 
 	FrameModel *copy = CopyRecord(record);
@@ -160,6 +169,10 @@ void Construct(FrameModel *record, Image2D* img, Vector3 rot)
 void DisposeFrameModel(FrameModel *record)
 {
 	if (record != NULL)
-		FreeRecord(record);
+	{
+		free(record->vertexes);
+		free(record->edges);
+		free(record);
+	}
 	record = NULL;
 }

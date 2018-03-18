@@ -33,7 +33,6 @@ namespace WinFormsTemplate {
 		{
 			InitializeComponent();			
 			PathBox->Text = filename;
-			//LoadFile();
 		}
 
 		MainForm()
@@ -69,6 +68,11 @@ namespace WinFormsTemplate {
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::Label^  label5;
 
+
+	private: System::Windows::Forms::Label^  label9;
+	private: System::Windows::Forms::TextBox^  scaleBox;
+
+
 	private:
 		/// <summary>
 		/// Требуется переменная конструктора.
@@ -94,6 +98,8 @@ namespace WinFormsTemplate {
 			this->PathBox = (gcnew System::Windows::Forms::TextBox());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->label9 = (gcnew System::Windows::Forms::Label());
+			this->scaleBox = (gcnew System::Windows::Forms::TextBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->DrawingCanvas))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -101,7 +107,7 @@ namespace WinFormsTemplate {
 			// 
 			this->DrawingCanvas->BackColor = System::Drawing::Color::White;
 			this->DrawingCanvas->Location = System::Drawing::Point(177, 8);
-			this->DrawingCanvas->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->DrawingCanvas->Margin = System::Windows::Forms::Padding(2);
 			this->DrawingCanvas->Name = L"DrawingCanvas";
 			this->DrawingCanvas->Size = System::Drawing::Size(469, 356);
 			this->DrawingCanvas->TabIndex = 0;
@@ -110,7 +116,7 @@ namespace WinFormsTemplate {
 			// X_TextBox
 			// 
 			this->X_TextBox->Location = System::Drawing::Point(52, 26);
-			this->X_TextBox->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->X_TextBox->Margin = System::Windows::Forms::Padding(2);
 			this->X_TextBox->Name = L"X_TextBox";
 			this->X_TextBox->Size = System::Drawing::Size(123, 20);
 			this->X_TextBox->TabIndex = 1;
@@ -139,7 +145,7 @@ namespace WinFormsTemplate {
 			// Y_TextBox
 			// 
 			this->Y_TextBox->Location = System::Drawing::Point(52, 47);
-			this->Y_TextBox->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->Y_TextBox->Margin = System::Windows::Forms::Padding(2);
 			this->Y_TextBox->Name = L"Y_TextBox";
 			this->Y_TextBox->Size = System::Drawing::Size(123, 20);
 			this->Y_TextBox->TabIndex = 3;
@@ -158,7 +164,7 @@ namespace WinFormsTemplate {
 			// Z_TextBox
 			// 
 			this->Z_TextBox->Location = System::Drawing::Point(52, 68);
-			this->Z_TextBox->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->Z_TextBox->Margin = System::Windows::Forms::Padding(2);
 			this->Z_TextBox->Name = L"Z_TextBox";
 			this->Z_TextBox->Size = System::Drawing::Size(123, 20);
 			this->Z_TextBox->TabIndex = 5;
@@ -166,8 +172,8 @@ namespace WinFormsTemplate {
 			// 
 			// ProcessButton
 			// 
-			this->ProcessButton->Location = System::Drawing::Point(8, 94);
-			this->ProcessButton->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->ProcessButton->Location = System::Drawing::Point(9, 133);
+			this->ProcessButton->Margin = System::Windows::Forms::Padding(2);
 			this->ProcessButton->Name = L"ProcessButton";
 			this->ProcessButton->Size = System::Drawing::Size(165, 27);
 			this->ProcessButton->TabIndex = 7;
@@ -178,7 +184,7 @@ namespace WinFormsTemplate {
 			// LoadButton
 			// 
 			this->LoadButton->Location = System::Drawing::Point(7, 337);
-			this->LoadButton->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->LoadButton->Margin = System::Windows::Forms::Padding(2);
 			this->LoadButton->Name = L"LoadButton";
 			this->LoadButton->Size = System::Drawing::Size(165, 27);
 			this->LoadButton->TabIndex = 8;
@@ -189,7 +195,7 @@ namespace WinFormsTemplate {
 			// PathBox
 			// 
 			this->PathBox->Location = System::Drawing::Point(9, 317);
-			this->PathBox->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->PathBox->Margin = System::Windows::Forms::Padding(2);
 			this->PathBox->Name = L"PathBox";
 			this->PathBox->Size = System::Drawing::Size(165, 20);
 			this->PathBox->TabIndex = 9;
@@ -214,11 +220,32 @@ namespace WinFormsTemplate {
 			this->label5->TabIndex = 11;
 			this->label5->Text = L"Degrees";
 			// 
+			// label9
+			// 
+			this->label9->AutoSize = true;
+			this->label9->Location = System::Drawing::Point(8, 112);
+			this->label9->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->label9->Name = L"label9";
+			this->label9->Size = System::Drawing::Size(37, 13);
+			this->label9->TabIndex = 13;
+			this->label9->Text = L"Scale:";
+			// 
+			// scaleBox
+			// 
+			this->scaleBox->Location = System::Drawing::Point(52, 109);
+			this->scaleBox->Margin = System::Windows::Forms::Padding(2);
+			this->scaleBox->Name = L"scaleBox";
+			this->scaleBox->Size = System::Drawing::Size(123, 20);
+			this->scaleBox->TabIndex = 12;
+			this->scaleBox->Text = L"1";
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(655, 372);
+			this->Controls->Add(this->label9);
+			this->Controls->Add(this->scaleBox);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->PathBox);
@@ -231,7 +258,7 @@ namespace WinFormsTemplate {
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->X_TextBox);
 			this->Controls->Add(this->DrawingCanvas);
-			this->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
+			this->Margin = System::Windows::Forms::Padding(2);
 			this->Name = L"MainForm";
 			this->Text = L"FrameViewer";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->DrawingCanvas))->EndInit();
