@@ -7,9 +7,6 @@
 #include <cmath>
 #include "RotationMatrix.h"
 
-// Global record
-FrameModel *record = NULL;
-
 void FreeRecord(FrameModel *rec)
 {
 	free(rec->vertexes);
@@ -18,12 +15,12 @@ void FreeRecord(FrameModel *rec)
 }
 
 // Загружает информацию о каркасной модели из указанного файла
-int MdlParseFile(char *filename)
+int MdlParseFile(FrameModel **record, char *filename)
 {
-	if (record != NULL)
+	if (*record != NULL)
 	{
-		FreeRecord(record);
-		record = NULL;
+		FreeRecord(*record);
+		*record = NULL;
 	}
 
 	std::ifstream file = std::ifstream(filename);
@@ -31,32 +28,32 @@ int MdlParseFile(char *filename)
 	{
 		return ERROR_NO_SUCH_FILE;
 	}
-	record = (FrameModel*)malloc(sizeof(FrameModel));
+	*record = (FrameModel*)malloc(sizeof(FrameModel));
 	if (record == NULL)
 	{
 		return ERROR_BAD_ALLOC;
 	}
-	record->vertexes = NULL;
-	record->edges = NULL;
+	(*record)->vertexes = NULL;
+	(*record)->edges = NULL;
 
 
 	// Reading vertexes
-	file >> record->N;
-	record->vertexes = (Vertex3D*)malloc(sizeof(Vertex3D)* record->N);
-	for (int i = 0; i < record->N; i++)
+	file >> (*record)->N;
+	(*record)->vertexes = (Vertex3D*)malloc(sizeof(Vertex3D)* (*record)->N);
+	for (int i = 0; i < (*record)->N; i++)
 	{
-		file >> record->vertexes[i].x;
-		file >> record->vertexes[i].y;
-		file >> record->vertexes[i].z;
+		file >> (*record)->vertexes[i].x;
+		file >> (*record)->vertexes[i].y;
+		file >> (*record)->vertexes[i].z;
 	}
 
 	// Reading edges
-	file >> record->E;
-	record->edges = (Edge*)malloc(sizeof(Edge)* record->E);
-	for (int i = 0; i < record->E; i++)
+	file >> (*record)->E;
+	(*record)->edges = (Edge*)malloc(sizeof(Edge)* (*record)->E);
+	for (int i = 0; i < (*record)->E; i++)
 	{
-		file >> record->edges[i].start_index;
-		file >> record->edges[i].end_index;
+		file >> (*record)->edges[i].start_index;
+		file >> (*record)->edges[i].end_index;
 	}
 
 	file.close();
@@ -115,7 +112,7 @@ FrameModel *CopyRecord(FrameModel *rec)
 
 
 // Применяет трансформации и конструирует проекцию по результату
-void Construct(Image2D* img, Vector3 rot)
+void Construct(FrameModel *record, Image2D* img, Vector3 rot)
 {
 	img->vertexCount = record->N;
 	img->edgesCount = record->E;
@@ -160,7 +157,7 @@ void Construct(Image2D* img, Vector3 rot)
 #endif
 }
 
-void DisposeFrameModel()
+void DisposeFrameModel(FrameModel *record)
 {
 	if (record != NULL)
 		FreeRecord(record);

@@ -15,6 +15,31 @@
 
 #define DEG2RAD M_PI / 180
 
+
+typedef struct Vertex2D
+{
+	int x, y;
+};
+
+typedef struct Edge
+{
+	int start_index;
+	int end_index;
+};
+
+typedef struct Image2D
+{
+	int vertexCount;
+	int edgesCount;
+	Vertex2D *points;
+	Edge *edges;
+};
+
+typedef struct Vector3
+{
+	float x, y, z;
+};
+
 typedef struct Vertex3D
 {
 	float x, y, z;
@@ -36,6 +61,6 @@ typedef struct FrameModel
  *
  */
 
-int MdlParseFile(char *filename);
-void Construct(Image2D *img, Vector3 rot);
-void DisposeFrameModel();
+int MdlParseFile(FrameModel **record, char *filename);
+void Construct(FrameModel *record, Image2D *img, Vector3 rot);
+void DisposeFrameModel(FrameModel *record);

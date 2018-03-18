@@ -19,7 +19,7 @@ namespace WinFormsTemplate
 		return res;
 	}
 
-	void MainForm::DrawProjection()
+	void MainForm::DrawProjection(FrameModel *model)
 	{
 		Graphics ^gr = DrawingCanvas->CreateGraphics();
 		Brush ^vertexBrush = gcnew SolidBrush(VERTEX_COLOR);
@@ -64,7 +64,7 @@ namespace WinFormsTemplate
 		}
 
 		Vector3 rot = { angleX, angleY, angleZ };
-		Construct(img, rot);
+		Construct(model, img, rot);
 		
 		// Drawing edges
 		for (int i = 0; i < img->edgesCount; i++)
@@ -87,37 +87,43 @@ namespace WinFormsTemplate
 		free(img);
 	}
 
-	void MainForm::LoadFile()
+	FrameModel *MainForm::LoadFile()
 	{
 		String ^path = PathBox->Text;
 		char *path_c = str2char(path);
-		int error = MdlParseFile(path_c);
+		FrameModel *record = NULL;
+		int error = MdlParseFile(&record, path_c);
 		switch (error)
 		{
-		case 0:
-			DrawProjection();
-			break;
 		case ERROR_BAD_ALLOC:
 			MessageBox::Show("Bad memory allocation", "ERROR");
+			record = NULL;
 			break;
 		case ERROR_FILE_PARSING:
 			MessageBox::Show("Bad file", "ERROR");
+			record = NULL;
 			break;
 		case ERROR_NO_SUCH_FILE:
 			MessageBox::Show("No such file", "ERROR");
+			record = NULL;
 			break;
 		}
-
 		free(path_c);
+		return record;
 	}
 
 	System::Void MainForm::ProcessButton_Click(System::Object^  sender, System::EventArgs^  e)
 	{
-		DrawProjection();
-	}
-
-	System::Void MainForm::LoadButton_Click(System::Object^  sender, System::EventArgs^  e)
-	{
-		LoadFile();
+		static FrameModel *model = NULL;
+		if (model == NULL || sender == (Object^)LoadButton)
+		{
+			DisposeFrameModel(model);
+			FrameModel *result = LoadFile();
+			model = result;
+		}
+		else if (sender == (Object^)ProcessButton)
+		{
+			DrawProjection(model);
+		}
 	}
 }

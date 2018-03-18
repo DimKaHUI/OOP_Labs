@@ -47,7 +47,6 @@ namespace WinFormsTemplate {
 		/// </summary>
 		~MainForm()
 		{
-			DisposeFrameModel();
 			if (components)
 			{
 				delete components;
@@ -101,68 +100,76 @@ namespace WinFormsTemplate {
 			// DrawingCanvas
 			// 
 			this->DrawingCanvas->BackColor = System::Drawing::Color::White;
-			this->DrawingCanvas->Location = System::Drawing::Point(266, 12);
+			this->DrawingCanvas->Location = System::Drawing::Point(177, 8);
+			this->DrawingCanvas->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->DrawingCanvas->Name = L"DrawingCanvas";
-			this->DrawingCanvas->Size = System::Drawing::Size(704, 548);
+			this->DrawingCanvas->Size = System::Drawing::Size(469, 356);
 			this->DrawingCanvas->TabIndex = 0;
 			this->DrawingCanvas->TabStop = false;
 			// 
 			// X_TextBox
 			// 
-			this->X_TextBox->Location = System::Drawing::Point(78, 40);
+			this->X_TextBox->Location = System::Drawing::Point(52, 26);
+			this->X_TextBox->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->X_TextBox->Name = L"X_TextBox";
-			this->X_TextBox->Size = System::Drawing::Size(182, 26);
+			this->X_TextBox->Size = System::Drawing::Size(123, 20);
 			this->X_TextBox->TabIndex = 1;
 			this->X_TextBox->Text = L"0";
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(7, 43);
+			this->label1->Location = System::Drawing::Point(5, 28);
+			this->label1->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(65, 20);
+			this->label1->Size = System::Drawing::Size(44, 13);
 			this->label1->TabIndex = 2;
 			this->label1->Text = L"Euler X:";
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(7, 75);
+			this->label2->Location = System::Drawing::Point(5, 49);
+			this->label2->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(65, 20);
+			this->label2->Size = System::Drawing::Size(44, 13);
 			this->label2->TabIndex = 4;
 			this->label2->Text = L"Euler Y:";
 			// 
 			// Y_TextBox
 			// 
-			this->Y_TextBox->Location = System::Drawing::Point(78, 72);
+			this->Y_TextBox->Location = System::Drawing::Point(52, 47);
+			this->Y_TextBox->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->Y_TextBox->Name = L"Y_TextBox";
-			this->Y_TextBox->Size = System::Drawing::Size(182, 26);
+			this->Y_TextBox->Size = System::Drawing::Size(123, 20);
 			this->Y_TextBox->TabIndex = 3;
 			this->Y_TextBox->Text = L"0";
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(7, 107);
+			this->label3->Location = System::Drawing::Point(5, 70);
+			this->label3->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
 			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(64, 20);
+			this->label3->Size = System::Drawing::Size(44, 13);
 			this->label3->TabIndex = 6;
 			this->label3->Text = L"Euler Z:";
 			// 
 			// Z_TextBox
 			// 
-			this->Z_TextBox->Location = System::Drawing::Point(78, 104);
+			this->Z_TextBox->Location = System::Drawing::Point(52, 68);
+			this->Z_TextBox->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->Z_TextBox->Name = L"Z_TextBox";
-			this->Z_TextBox->Size = System::Drawing::Size(182, 26);
+			this->Z_TextBox->Size = System::Drawing::Size(123, 20);
 			this->Z_TextBox->TabIndex = 5;
 			this->Z_TextBox->Text = L"0";
 			// 
 			// ProcessButton
 			// 
-			this->ProcessButton->Location = System::Drawing::Point(12, 144);
+			this->ProcessButton->Location = System::Drawing::Point(8, 94);
+			this->ProcessButton->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->ProcessButton->Name = L"ProcessButton";
-			this->ProcessButton->Size = System::Drawing::Size(248, 41);
+			this->ProcessButton->Size = System::Drawing::Size(165, 27);
 			this->ProcessButton->TabIndex = 7;
 			this->ProcessButton->Text = L"Apply";
 			this->ProcessButton->UseVisualStyleBackColor = true;
@@ -170,44 +177,48 @@ namespace WinFormsTemplate {
 			// 
 			// LoadButton
 			// 
-			this->LoadButton->Location = System::Drawing::Point(11, 519);
+			this->LoadButton->Location = System::Drawing::Point(7, 337);
+			this->LoadButton->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->LoadButton->Name = L"LoadButton";
-			this->LoadButton->Size = System::Drawing::Size(248, 41);
+			this->LoadButton->Size = System::Drawing::Size(165, 27);
 			this->LoadButton->TabIndex = 8;
 			this->LoadButton->Text = L"Load frame";
 			this->LoadButton->UseVisualStyleBackColor = true;
-			this->LoadButton->Click += gcnew System::EventHandler(this, &MainForm::LoadButton_Click);
+			this->LoadButton->Click += gcnew System::EventHandler(this, &MainForm::ProcessButton_Click);
 			// 
 			// PathBox
 			// 
-			this->PathBox->Location = System::Drawing::Point(13, 487);
+			this->PathBox->Location = System::Drawing::Point(9, 317);
+			this->PathBox->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->PathBox->Name = L"PathBox";
-			this->PathBox->Size = System::Drawing::Size(246, 26);
+			this->PathBox->Size = System::Drawing::Size(165, 20);
 			this->PathBox->TabIndex = 9;
 			// 
 			// label4
 			// 
 			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(12, 464);
+			this->label4->Location = System::Drawing::Point(8, 302);
+			this->label4->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(124, 20);
+			this->label4->Size = System::Drawing::Size(84, 13);
 			this->label4->TabIndex = 10;
 			this->label4->Text = L"Model file name:";
 			// 
 			// label5
 			// 
 			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(136, 17);
+			this->label5->Location = System::Drawing::Point(91, 11);
+			this->label5->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(70, 20);
+			this->label5->Size = System::Drawing::Size(47, 13);
 			this->label5->TabIndex = 11;
 			this->label5->Text = L"Degrees";
 			// 
 			// MainForm
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(9, 20);
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(982, 572);
+			this->ClientSize = System::Drawing::Size(655, 372);
 			this->Controls->Add(this->label5);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->PathBox);
@@ -220,6 +231,7 @@ namespace WinFormsTemplate {
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->X_TextBox);
 			this->Controls->Add(this->DrawingCanvas);
+			this->Margin = System::Windows::Forms::Padding(2, 2, 2, 2);
 			this->Name = L"MainForm";
 			this->Text = L"FrameViewer";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->DrawingCanvas))->EndInit();
@@ -233,10 +245,9 @@ namespace WinFormsTemplate {
 	private:
 		System::Void ProcessButton_Click(System::Object^  sender, System::EventArgs^  e);
 	private:
-		System::Void LoadButton_Click(System::Object^  sender, System::EventArgs^  e);
-		void DrawProjection();
-		void LoadFile();
-	};
+		void DrawProjection(FrameModel *model);
+		FrameModel* LoadFile();
+};
 
 }
 
