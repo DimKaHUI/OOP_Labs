@@ -1,8 +1,9 @@
 #include "stdafx.h"
-#include "MainForm.h"
-#include "FrameMdlProjector.h"
 #include <iostream>
 #include <fstream>
+
+#include "MainForm.h"
+#include "FrameMdlProjector.h"
 
 namespace WinFormsTemplate
 {
@@ -22,7 +23,7 @@ namespace WinFormsTemplate
 	void MainForm::DrawProjection(FrameModel *model)
 	{
 
-		// Reading from form
+		// Reading from MainForm
 		Image2D *img = (Image2D*)malloc(sizeof(Image2D));
 		Double angleX, angleY, angleZ, scale;
 		if (!Double::TryParse(X_TextBox->Text, angleX))
