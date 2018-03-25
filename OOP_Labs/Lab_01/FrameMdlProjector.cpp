@@ -7,27 +7,27 @@
 
 #include "FrameMdlProjector.h"
 
-void setupVertex3D(Vertex3D *v, int x, int y, int z)
+void setupVertex3D(Vertex3D *v, float x, float y, float z)
 {
 	v->x = x;
 	v->y = y;
 	v->z = z;
 }
 
-int getVertex3DX(FrameModel *mdl, int ind)
+float getVertex3DX(FrameModel *mdl, int ind)
 {
 	Vertex3D v = mdl->vertexes[ind];
 	return v.x;
 }
-int getVertex3DY(FrameModel *mdl, int ind)
+float getVertex3DY(FrameModel *mdl, int ind)
 {
 	Vertex3D v = mdl->vertexes[ind];
 	return v.y;
 }
-int getVertex3DZ(FrameModel *mdl, int ind)
+float getVertex3DZ(FrameModel *mdl, int ind)
 {
 	Vertex3D v = mdl->vertexes[ind];
-	return v.y;
+	return v.z;
 }
 
 // Загружает информацию о каркасной модели из указанного файла
@@ -94,51 +94,39 @@ void Rotate(FrameModel *rec, float ax, float ay, float az)
 		double y = getVertex3DY(rec, i);
 		double z = getVertex3DZ(rec, i);
 
-		//y = rec->vertexes[i].y * cos(ax) - rec->vertexes[i].z * sin(ax);
 		y = getVertex3DY(rec, i) * cos(ax) - getVertex3DZ(rec, i) * sin(ax);
-
 		z = getVertex3DY(rec, i) * sin(ax) + getVertex3DZ(rec, i) * cos(ax);
 
-		//rec->vertexes[i].y = y;
-		//rec->vertexes[i].z = z;
 		setupVertex3D(&(rec->vertexes[i]), x, y, z);
 
-		x = getVertex3DX(rec, i) * cos(ay) + getVertex3DZ(rec, i) * sin(ay);
+		x = getVertex3DX(rec, i) *cos(ay) + getVertex3DZ(rec, i) * sin(ay);
 		z = -getVertex3DX(rec, i) * sin(ay) + getVertex3DZ(rec, i) * cos(ay);
 
-		//rec->vertexes[i].x = x;
-		//rec->vertexes[i].z = z;
 		setupVertex3D(&(rec->vertexes[i]), x, y, z);
 
 		x = getVertex3DX(rec, i) * cos(az) - getVertex3DY(rec, i) * sin(az);
 		y = getVertex3DX(rec, i) * sin(az) + getVertex3DY(rec, i) * cos(az);
 
-		//rec->vertexes[i].x = x;;
-		//rec->vertexes[i].y = y;
 		setupVertex3D(&(rec->vertexes[i]), x, y, z);
 	}
 }
 
-#ifndef RELATIVE_TRANSFORMATION
-// Дублирует данные модели
-FrameModel *CopyRecord(FrameModel *rec)
+void Translate(FrameModel *record, Vertex3D tran)
 {
-	FrameModel *copy = (FrameModel*)malloc(sizeof(FrameModel));
-	copy->N = record->N;
-	copy->E = record->E;
-	copy->vertexes = (Vertex3D*)malloc(sizeof(Vertex3D) * copy->N);
-	copy->edges = (Edge*)malloc(sizeof(Edge) * copy->E);
-	for (int i = 0; i < copy->N; i++)
+	if (record == NULL)
+		return;
+	if (record->vertexes == NULL)
+		return;
+	for (int i = 0; i < record->N; i++)
 	{
-		copy->vertexes[i] = rec->vertexes[i];
+		float
+			x = getVertex3DX(record, i),
+			y = getVertex3DY(record, i),
+			z = getVertex3DZ(record, i);
+		setupVertex3D(&(record->vertexes[i]), x + tran.x, y + tran.y, z + tran.z);
 	}
-	for (int i = 0; i < copy->E; i++)
-	{
-		copy->edges[i] = rec->edges[i];
-	}
-	return copy;
 }
-#endif
+
 
 // Однородно масштабирует модель
 void Scale(FrameModel *record, double scale)
@@ -149,20 +137,31 @@ void Scale(FrameModel *record, double scale)
 		return;
 	for (int i = 0; i < record->N; i++)
 	{
-		int 
+		float 
 			x = getVertex3DX(record, i), 
 			y = getVertex3DY(record, i),
 			z = getVertex3DZ(record, i);
-		//record->vertexes[i].x *= scale;
-		//record->vertexes[i].y *= scale;
-		//record->vertexes[i].z *= scale;
 		setupVertex3D(&(record->vertexes[i]), x * scale, y * scale, z * scale);
 	}
 }
 
+Vertex3D GetRotation(TransformProps *props)
+{
+	return props->Rotation;
+}
+
+Vertex3D GetTranslation(TransformProps *props)
+{
+	return props->Translation;
+}
+
+double GetScale(TransformProps *props)
+{
+	return props->scale;
+}
 
 // Применяет трансформации и конструирует проекцию по результату
-void Construct(FrameModel *record, Image2D* img, Vertex3D rot, double scale)
+void Construct(FrameModel *record, Image2D* img, TransformProps *props)
 {
 	if (record == NULL)
 		return;
@@ -175,51 +174,30 @@ void Construct(FrameModel *record, Image2D* img, Vertex3D rot, double scale)
 	img->points = (Vertex2D*)malloc(sizeof(Vertex2D)*record->N);
 	img->edges = (Edge*)malloc(sizeof(Edge)*record->E);
 
-#ifdef RELATIVE_TRANSFORMATION
+	Vertex3D rot = GetRotation(props);
+	Vertex3D tran = GetTranslation(props);
+	double scale = GetScale(props);
 
 	// Трансформирование
 	Rotate(record, DEG2RAD * rot.x, DEG2RAD * rot.y, DEG2RAD * rot.z);
+	Translate(record, tran);
 	Scale(record, scale);
 
 	// Проецирование
 	for (int i = 0; i < record->N; i++)
 	{
-		int 
+		float 
 		x = getVertex3DX(record, i), 
 		y = getVertex3DY(record, i);
-		//img->points[i].x = (record->vertexes[i].x);
-		//img->points[i].y = (record->vertexes[i].y);
 		setupVertex2D(&(img->points[i]), x, y);
 	}
 
 	for (int i = 0; i < record->E; i++)
 	{
-		img->edges[i].start_index = record->edges[i].start_index;
-		img->edges[i].end_index = record->edges[i].end_index;
+		int start = getEdgeStart(record->edges[i]);
+		int end = getEdgeEnd(record->edges[i]);
+		setupEdge(&(img->edges[i]), start, end);
 	}
-
-	
-
-#else
-
-	FrameModel *copy = CopyRecord(record);
-
-	Rotate(copy, DEG2RAD * rot.x, DEG2RAD * rot.y, DEG2RAD * rot.z);
-
-	for (int i = 0; i < record->N; i++)
-	{
-		img->points[i].x = (copy->vertexes[i].x);
-		img->points[i].y = (copy->vertexes[i].y);
-	}
-
-	for (int i = 0; i < copy->E; i++)
-	{
-		img->edges[i].start_index = copy->edges[i].start_index;
-		img->edges[i].end_index = copy->edges[i].end_index;
-	}
-
-	FreeRecord(copy);
-#endif
 }
 
 void DisposeFrameModel(FrameModel *record)

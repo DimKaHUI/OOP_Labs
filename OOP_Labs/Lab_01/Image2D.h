@@ -17,8 +17,7 @@ typedef struct Image2D
 };
 
 void setupVertex2D(Vertex2D *vertex, int x, int y);
+Vertex2D getVertex(Image2D *img, int ind);
 int getVertex2DX(Image2D *img, int ind);
 int getVertex2DY(Image2D *img, int ind);
-int getEdgeS(Image2D *img, int ind);
-int getEdgeE(Image2D *img, int ind);
 

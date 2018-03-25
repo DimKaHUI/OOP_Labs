@@ -28,6 +28,13 @@ typedef struct FrameModel
 	Edge *edges;
 };
 
+typedef struct TransformProps
+{
+	Vertex3D Rotation;
+	Vertex3D Translation;
+	double scale;
+};
+
 /* Структура файла:
  * int N - количество вершин
  * int x, int y, int z [Repeat N] - вершины
@@ -39,13 +46,13 @@ typedef struct FrameModel
 int MdlParseFile(FrameModel **record, char *filename);
 
 // Конструирование изображения 
-void Construct(FrameModel *record, Image2D *img, Vertex3D rot, double scale);
+void Construct(FrameModel *record, Image2D *img, TransformProps *props);
 
 // Освобождение памяти из-под модели
 void DisposeFrameModel(FrameModel *record);
 
-void setupVertex3D(Vertex3D *v, int x, int y, int z);
+void setupVertex3D(Vertex3D *v, float x, float y, float z);
 
-int getVertex3DX(FrameModel *mdl, int ind);
-int getVertex3DY(FrameModel *mdl, int ind);
-int getVertex3DZ(FrameModel *mdl, int ind);
+float getVertex3DX(FrameModel *mdl, int ind);
+float getVertex3DY(FrameModel *mdl, int ind);
+float getVertex3DZ(FrameModel *mdl, int ind);

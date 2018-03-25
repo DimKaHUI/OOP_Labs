@@ -73,6 +73,13 @@ namespace WinFormsTemplate {
 
 	private: System::Windows::Forms::Label^  label9;
 	private: System::Windows::Forms::TextBox^  scaleBox;
+	private: System::Windows::Forms::Label^  label6;
+	private: System::Windows::Forms::TextBox^  tranZ_box;
+	private: System::Windows::Forms::Label^  label7;
+	private: System::Windows::Forms::TextBox^  tranY_box;
+	private: System::Windows::Forms::Label^  label8;
+	private: System::Windows::Forms::TextBox^  tranX_box;
+	private: System::Windows::Forms::Label^  label10;
 
 
 	private:
@@ -102,6 +109,13 @@ namespace WinFormsTemplate {
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->scaleBox = (gcnew System::Windows::Forms::TextBox());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->tranZ_box = (gcnew System::Windows::Forms::TextBox());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->tranY_box = (gcnew System::Windows::Forms::TextBox());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->tranX_box = (gcnew System::Windows::Forms::TextBox());
+			this->label10 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->DrawingCanvas))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -174,7 +188,7 @@ namespace WinFormsTemplate {
 			// 
 			// ProcessButton
 			// 
-			this->ProcessButton->Location = System::Drawing::Point(9, 133);
+			this->ProcessButton->Location = System::Drawing::Point(9, 218);
 			this->ProcessButton->Margin = System::Windows::Forms::Padding(2);
 			this->ProcessButton->Name = L"ProcessButton";
 			this->ProcessButton->Size = System::Drawing::Size(165, 27);
@@ -241,11 +255,85 @@ namespace WinFormsTemplate {
 			this->scaleBox->TabIndex = 12;
 			this->scaleBox->Text = L"1";
 			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Location = System::Drawing::Point(5, 196);
+			this->label6->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(14, 13);
+			this->label6->TabIndex = 19;
+			this->label6->Text = L"Z";
+			// 
+			// tranZ_box
+			// 
+			this->tranZ_box->Location = System::Drawing::Point(52, 194);
+			this->tranZ_box->Margin = System::Windows::Forms::Padding(2);
+			this->tranZ_box->Name = L"tranZ_box";
+			this->tranZ_box->Size = System::Drawing::Size(123, 20);
+			this->tranZ_box->TabIndex = 18;
+			this->tranZ_box->Text = L"0";
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Location = System::Drawing::Point(5, 175);
+			this->label7->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(14, 13);
+			this->label7->TabIndex = 17;
+			this->label7->Text = L"Y";
+			// 
+			// tranY_box
+			// 
+			this->tranY_box->Location = System::Drawing::Point(52, 173);
+			this->tranY_box->Margin = System::Windows::Forms::Padding(2);
+			this->tranY_box->Name = L"tranY_box";
+			this->tranY_box->Size = System::Drawing::Size(123, 20);
+			this->tranY_box->TabIndex = 16;
+			this->tranY_box->Text = L"0";
+			// 
+			// label8
+			// 
+			this->label8->AutoSize = true;
+			this->label8->Location = System::Drawing::Point(5, 154);
+			this->label8->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(14, 13);
+			this->label8->TabIndex = 15;
+			this->label8->Text = L"X";
+			// 
+			// tranX_box
+			// 
+			this->tranX_box->Location = System::Drawing::Point(52, 152);
+			this->tranX_box->Margin = System::Windows::Forms::Padding(2);
+			this->tranX_box->Name = L"tranX_box";
+			this->tranX_box->Size = System::Drawing::Size(123, 20);
+			this->tranX_box->TabIndex = 14;
+			this->tranX_box->Text = L"0";
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Location = System::Drawing::Point(91, 137);
+			this->label10->Margin = System::Windows::Forms::Padding(2, 0, 2, 0);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(51, 13);
+			this->label10->TabIndex = 20;
+			this->label10->Text = L"Translate";
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(655, 372);
+			this->Controls->Add(this->label10);
+			this->Controls->Add(this->label6);
+			this->Controls->Add(this->tranZ_box);
+			this->Controls->Add(this->label7);
+			this->Controls->Add(this->tranY_box);
+			this->Controls->Add(this->label8);
+			this->Controls->Add(this->tranX_box);
 			this->Controls->Add(this->label9);
 			this->Controls->Add(this->scaleBox);
 			this->Controls->Add(this->label5);
@@ -282,9 +370,16 @@ namespace WinFormsTemplate {
 		FrameModel* LoadFile();
 
 		// —читывание текстовых полей трансформации
-		int GetUserVals(Vertex3D *rot, double *scale);
+		int GetUserVals(Vertex3D *rot, Vertex3D *translate, double *scale);
 
 		void DrawEdge(Image2D *img, Edge *edge);
+
+		System::Drawing::Size getScrSize();
+
+		int getScrHeight();
+		int getScrWidth();
+
+		void DrawLabels();
 };
 
 }
