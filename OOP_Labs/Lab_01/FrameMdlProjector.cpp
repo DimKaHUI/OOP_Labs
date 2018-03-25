@@ -7,6 +7,28 @@
 
 #include "FrameMdlProjector.h"
 
+void setupVertex3D(Vertex3D *v, int x, int y, int z)
+{
+	v->x = x;
+	v->y = y;
+	v->z = z;
+}
+
+int getVertex3DX(FrameModel *mdl, int ind)
+{
+	Vertex3D v = mdl->vertexes[ind];
+	return v.x;
+}
+int getVertex3DY(FrameModel *mdl, int ind)
+{
+	Vertex3D v = mdl->vertexes[ind];
+	return v.y;
+}
+int getVertex3DZ(FrameModel *mdl, int ind)
+{
+	Vertex3D v = mdl->vertexes[ind];
+	return v.y;
+}
 
 // Загружает информацию о каркасной модели из указанного файла
 int MdlParseFile(FrameModel **record, char *filename)
@@ -23,8 +45,9 @@ int MdlParseFile(FrameModel **record, char *filename)
 		return ERROR_NO_SUCH_FILE;
 	}
 	*record = (FrameModel*)malloc(sizeof(FrameModel));
-	if (record == NULL)
+	if (*record == NULL)
 	{
+		file.close();
 		return ERROR_BAD_ALLOC;
 	}
 	(*record)->vertexes = NULL;
@@ -36,9 +59,11 @@ int MdlParseFile(FrameModel **record, char *filename)
 	(*record)->vertexes = (Vertex3D*)malloc(sizeof(Vertex3D)* (*record)->N);
 	for (int i = 0; i < (*record)->N; i++)
 	{
-		file >> (*record)->vertexes[i].x;
-		file >> (*record)->vertexes[i].y;
-		file >> (*record)->vertexes[i].z;
+		int x, y, z;
+		file >> x;
+		file >> y;
+		file >> z;
+		setupVertex3D(&(*record)->vertexes[i], x, y, z);
 	}
 
 	// Reading edges
@@ -46,8 +71,10 @@ int MdlParseFile(FrameModel **record, char *filename)
 	(*record)->edges = (Edge*)malloc(sizeof(Edge)* (*record)->E);
 	for (int i = 0; i < (*record)->E; i++)
 	{
-		file >> (*record)->edges[i].start_index;
-		file >> (*record)->edges[i].end_index;
+		int s, e;
+		file >> s;
+		file >> e;
+		setupEdge(&(*record)->edges[i], s, e);
 	}
 
 	file.close();
@@ -57,29 +84,38 @@ int MdlParseFile(FrameModel **record, char *filename)
 // Вращает модель
 void Rotate(FrameModel *rec, float ax, float ay, float az)
 {
+	if (rec == NULL)
+		return;
+	if (rec->vertexes == NULL)
+		return;
 	for (int i = 0; i < rec->N; i++)
 	{		
-		double x = rec->vertexes[i].x;
-		double y = rec->vertexes[i].y;
-		double z = rec->vertexes[i].z;
+		double x = getVertex3DX(rec, i);
+		double y = getVertex3DY(rec, i);
+		double z = getVertex3DZ(rec, i);
 
-		y = rec->vertexes[i].y * cos(ax) - rec->vertexes[i].z * sin(ax);
-		z = rec->vertexes[i].y * sin(ax) + rec->vertexes[i].z * cos(ax);
+		//y = rec->vertexes[i].y * cos(ax) - rec->vertexes[i].z * sin(ax);
+		y = getVertex3DY(rec, i) * cos(ax) - getVertex3DZ(rec, i) * sin(ax);
 
-		rec->vertexes[i].y = y;
-		rec->vertexes[i].z = z;
+		z = getVertex3DY(rec, i) * sin(ax) + getVertex3DZ(rec, i) * cos(ax);
 
-		x = rec->vertexes[i].x * cos(ay) + rec->vertexes[i].z * sin(ay);
-		z = -rec->vertexes[i].x * sin(ay) + rec->vertexes[i].z * cos(ay);
+		//rec->vertexes[i].y = y;
+		//rec->vertexes[i].z = z;
+		setupVertex3D(&(rec->vertexes[i]), x, y, z);
 
-		rec->vertexes[i].x = x;
-		rec->vertexes[i].z = z;
+		x = getVertex3DX(rec, i) * cos(ay) + getVertex3DZ(rec, i) * sin(ay);
+		z = -getVertex3DX(rec, i) * sin(ay) + getVertex3DZ(rec, i) * cos(ay);
 
-		x = rec->vertexes[i].x * cos(az) - rec->vertexes[i].y * sin(az);
-		y = rec->vertexes[i].x * sin(az) + rec->vertexes[i].y * cos(az);
+		//rec->vertexes[i].x = x;
+		//rec->vertexes[i].z = z;
+		setupVertex3D(&(rec->vertexes[i]), x, y, z);
 
-		rec->vertexes[i].x = x;;
-		rec->vertexes[i].y = y;
+		x = getVertex3DX(rec, i) * cos(az) - getVertex3DY(rec, i) * sin(az);
+		y = getVertex3DX(rec, i) * sin(az) + getVertex3DY(rec, i) * cos(az);
+
+		//rec->vertexes[i].x = x;;
+		//rec->vertexes[i].y = y;
+		setupVertex3D(&(rec->vertexes[i]), x, y, z);
 	}
 }
 
@@ -107,11 +143,20 @@ FrameModel *CopyRecord(FrameModel *rec)
 // Однородно масштабирует модель
 void Scale(FrameModel *record, double scale)
 {
+	if (record == NULL)
+		return;
+	if (record->vertexes == NULL)
+		return;
 	for (int i = 0; i < record->N; i++)
 	{
-		record->vertexes[i].x *= scale;
-		record->vertexes[i].y *= scale;
-		record->vertexes[i].z *= scale;
+		int 
+			x = getVertex3DX(record, i), 
+			y = getVertex3DY(record, i),
+			z = getVertex3DZ(record, i);
+		//record->vertexes[i].x *= scale;
+		//record->vertexes[i].y *= scale;
+		//record->vertexes[i].z *= scale;
+		setupVertex3D(&(record->vertexes[i]), x * scale, y * scale, z * scale);
 	}
 }
 
@@ -119,6 +164,11 @@ void Scale(FrameModel *record, double scale)
 // Применяет трансформации и конструирует проекцию по результату
 void Construct(FrameModel *record, Image2D* img, Vertex3D rot, double scale)
 {
+	if (record == NULL)
+		return;
+	if (record->vertexes == NULL)
+		return;
+
 	img->vertexCount = record->N;
 	img->edgesCount = record->E;
 
@@ -127,13 +177,19 @@ void Construct(FrameModel *record, Image2D* img, Vertex3D rot, double scale)
 
 #ifdef RELATIVE_TRANSFORMATION
 
+	// Трансформирование
 	Rotate(record, DEG2RAD * rot.x, DEG2RAD * rot.y, DEG2RAD * rot.z);
 	Scale(record, scale);
 
+	// Проецирование
 	for (int i = 0; i < record->N; i++)
 	{
-		img->points[i].x = (record->vertexes[i].x);
-		img->points[i].y = (record->vertexes[i].y);
+		int 
+		x = getVertex3DX(record, i), 
+		y = getVertex3DY(record, i);
+		//img->points[i].x = (record->vertexes[i].x);
+		//img->points[i].y = (record->vertexes[i].y);
+		setupVertex2D(&(img->points[i]), x, y);
 	}
 
 	for (int i = 0; i < record->E; i++)

@@ -33,6 +33,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="Edge.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="Image2D.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -45,6 +51,12 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="FrameMdlProjector.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Image2D.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Edge.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

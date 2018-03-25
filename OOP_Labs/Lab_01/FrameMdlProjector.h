@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include "Image2D.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -13,26 +14,6 @@
 #define ERROR_BAD_ALLOC -113
 
 #define DEG2RAD M_PI / 180
-
-
-typedef struct Vertex2D
-{
-	int x, y;
-};
-
-typedef struct Edge
-{
-	int start_index;
-	int end_index;
-};
-
-typedef struct Image2D
-{
-	int vertexCount;
-	int edgesCount;
-	Vertex2D *points;
-	Edge *edges;
-};
 
 typedef struct Vertex3D
 {
@@ -54,6 +35,17 @@ typedef struct FrameModel
  * int i, int j [Repeat E] - рёбра
  */
 
+// Считывание модели из файла
 int MdlParseFile(FrameModel **record, char *filename);
+
+// Конструирование изображения 
 void Construct(FrameModel *record, Image2D *img, Vertex3D rot, double scale);
+
+// Освобождение памяти из-под модели
 void DisposeFrameModel(FrameModel *record);
+
+void setupVertex3D(Vertex3D *v, int x, int y, int z);
+
+int getVertex3DX(FrameModel *mdl, int ind);
+int getVertex3DY(FrameModel *mdl, int ind);
+int getVertex3DZ(FrameModel *mdl, int ind);

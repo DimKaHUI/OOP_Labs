@@ -12,6 +12,8 @@
 #define DRAW_LABELS
 #define VERTEX_COLOR Color::Red
 #define EDGE_COLOR Color::Black
+#define ERROR_USER_DATA -111
+#define OK 0
 
 
 namespace WinFormsTemplate {
@@ -270,10 +272,19 @@ namespace WinFormsTemplate {
 
 
 	private:
+		// Точка входа - обработ
 		System::Void ProcessButton_Click(System::Object^  sender, System::EventArgs^  e);
-	private:
+
+		// Отображение проекции
 		void DrawProjection(FrameModel *model);
+
+		// Загрузка модели из файла
 		FrameModel* LoadFile();
+
+		// Считывание текстовых полей трансформации
+		int GetUserVals(Vertex3D *rot, double *scale);
+
+		void DrawEdge(Image2D *img, Edge *edge);
 };
 
 }
