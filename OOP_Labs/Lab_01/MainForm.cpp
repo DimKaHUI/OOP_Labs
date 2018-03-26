@@ -5,14 +5,10 @@
 #include "MainForm.h"
 #include "FrameMdlProjector.h"
 #include "strfuncs.h"
+#include "UserMessage.h"
 
 namespace WinFormsTemplate
-{
-
-	void ShowMessage(String^ msg)
-	{
-		MessageBox::Show(msg);
-	}
+{	
 
 	// Получает данные пользователя
 	int MainForm::GetUserVals(Vertex3D *rot, Vertex3D *translate, double *scale)
@@ -75,7 +71,7 @@ namespace WinFormsTemplate
 
 	
 
-	void MainForm::DrawEdge(Image2D *img, Edge *edge)
+	void MainForm::DrawEdge(const Image2D *img, const Edge *edge)
 	{
 		Graphics ^gr = DrawingCanvas->CreateGraphics();
 		gr->TranslateTransform(getScrWidth() / 2, getScrHeight() / 2);
@@ -118,13 +114,40 @@ namespace WinFormsTemplate
 	
 	}
 
+	void MainForm::Render(const Image2D *img)
+	{
+		DrawLabels();
+
+		Graphics ^gr = DrawingCanvas->CreateGraphics();
+		Brush ^vertexBrush = gcnew SolidBrush(VERTEX_COLOR);
+
+		// Drawing edges
+		for (int i = 0; i < img->edgesCount; i++)
+			DrawEdge(img, &(img->edges[i]));
+
+		// Drawing verts
+		gr->TranslateTransform(getScrWidth() / 2, getScrHeight() / 2);
+		for (int i = 0; i < img->vertexCount; i++)
+		{
+			int x = getVertex2DX(img, i);
+			int y = getVertex2DY(img, i);
+
+			gr->FillEllipse(
+				vertexBrush,
+				x - POINT_SIZE_HALF,
+				-y - POINT_SIZE_HALF,
+				POINT_SIZE, POINT_SIZE
+				);
+		}
+	}
+
 	// Отображает проекцию модели
-	void MainForm::DrawProjection(FrameModel *model)
+	int MainForm::DrawProjection(FrameModel *model)
 	{
 		if (model == NULL)
 		{
 			ShowMessage("Error: Model not loaded");
-			return;
+			return ERROR_NO_DATA;
 		}
 
 		// Reading from MainForm
@@ -132,35 +155,17 @@ namespace WinFormsTemplate
 		Vertex3D translate;
 		double scale;		
 		int err = GetUserVals(&rot, &translate, &scale);
-		if (err)		
-			return;
+		if (err != OK)		
+			return err;
+		TransformProps props = { rot, translate, scale };		
 
-		TransformProps props = { rot, translate, scale };
+		Image2D img;
+
+		err = Construct(model, &img, &props);
+		if (err != OK)
+			return err;
 		
-
-		Image2D *img = (Image2D*)malloc(sizeof(Image2D));
-		
-		// Drawing variables
-		Graphics ^gr = DrawingCanvas->CreateGraphics();
-		Brush ^vertexBrush = gcnew SolidBrush(VERTEX_COLOR);
-
-		DrawLabels();
-
-		Construct(model, img, &props);
-		
-		// Drawing edges
-		for (int i = 0; i < img->edgesCount; i++)		
-			DrawEdge(img, &(model->edges[i]));		
-
-		// Drawing verts
-		gr->TranslateTransform(getScrWidth() / 2, getScrHeight() / 2);
-		for (int i = 0; i < img->vertexCount; i++)		
-			gr->FillEllipse(vertexBrush, img->points[i].x - POINT_SIZE / 2, -img->points[i].y - POINT_SIZE / 2, POINT_SIZE, POINT_SIZE);
-		
-
-		free(img->edges);
-		free(img->points);
-		free(img);
+		Render(&img);
 	}
 
 	FrameModel *MainForm::LoadFile()
@@ -198,7 +203,14 @@ namespace WinFormsTemplate
 		}
 		else if (sender == (Object^)ProcessButton)
 		{
-			DrawProjection(model);
+			int err = DrawProjection(model);
+			switch (err)
+			{
+			case ERROR_BAD_ALLOC:
+				ShowMessage("Bad memory allocation");
+				break;
+			}
+
 		}
 	}
 }

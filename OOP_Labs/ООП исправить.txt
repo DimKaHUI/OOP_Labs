@@ -4,4 +4,4 @@
 ++ Перемещения - реализовать
 ++ Закрывать файл в MdlParseFile
 ++ GetUserData - заменить return 1 на дефайн
-++DrawProjection - разбить
+++ DrawProjection - разбить

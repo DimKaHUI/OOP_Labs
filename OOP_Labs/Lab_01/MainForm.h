@@ -4,6 +4,7 @@
 #include "FrameMdlProjector.h"
 
 #define POINT_SIZE 5
+#define POINT_SIZE_HALF 2
 #define X_LABEL_OFFSET -20
 #define Y_LABEL_OFFSET 10
 #define LABEL_FONT_SIZE 14
@@ -14,7 +15,6 @@
 #define EDGE_COLOR Color::Black
 #define ERROR_USER_DATA -111
 #define OK 0
-
 
 namespace WinFormsTemplate {
 
@@ -364,7 +364,7 @@ namespace WinFormsTemplate {
 		System::Void ProcessButton_Click(System::Object^  sender, System::EventArgs^  e);
 
 		// Отображение проекции
-		void DrawProjection(FrameModel *model);
+		int DrawProjection(FrameModel *model);
 
 		// Загрузка модели из файла
 		FrameModel* LoadFile();
@@ -372,7 +372,7 @@ namespace WinFormsTemplate {
 		// Считывание текстовых полей трансформации
 		int GetUserVals(Vertex3D *rot, Vertex3D *translate, double *scale);
 
-		void DrawEdge(Image2D *img, Edge *edge);
+		void DrawEdge(const Image2D *img, const Edge *edge);
 
 		System::Drawing::Size getScrSize();
 
@@ -380,6 +380,8 @@ namespace WinFormsTemplate {
 		int getScrWidth();
 
 		void DrawLabels();
+
+		void Render(const Image2D *img);
 };
 
 }

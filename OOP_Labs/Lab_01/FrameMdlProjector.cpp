@@ -30,6 +30,29 @@ float getVertex3DZ(FrameModel *mdl, int ind)
 	return v.z;
 }
 
+void ReadVertexes(std::ifstream &file, Vertex3D *verts, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		int x, y, z;
+		file >> x;
+		file >> y;
+		file >> z;
+		setupVertex3D(&verts[i], x, y, z);
+	}
+}
+
+void ReadEdges(std::ifstream &file, Edge *edges, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		int s, e;
+		file >> s;
+		file >> e;
+		setupEdge(&edges[i], s, e);
+	}
+}
+
 // Загружает информацию о каркасной модели из указанного файла
 int MdlParseFile(FrameModel **record, char *filename)
 {
@@ -52,30 +75,27 @@ int MdlParseFile(FrameModel **record, char *filename)
 	}
 	(*record)->vertexes = NULL;
 	(*record)->edges = NULL;
-
-
+	
 	// Reading vertexes
 	file >> (*record)->N;
 	(*record)->vertexes = (Vertex3D*)malloc(sizeof(Vertex3D)* (*record)->N);
-	for (int i = 0; i < (*record)->N; i++)
+	if ((*record)->vertexes == NULL)
 	{
-		int x, y, z;
-		file >> x;
-		file >> y;
-		file >> z;
-		setupVertex3D(&(*record)->vertexes[i], x, y, z);
-	}
+		file.close();
+		return ERROR_BAD_ALLOC;
+	}	
+	ReadVertexes(file, (*record)->vertexes, (*record)->N);
 
 	// Reading edges
 	file >> (*record)->E;
 	(*record)->edges = (Edge*)malloc(sizeof(Edge)* (*record)->E);
-	for (int i = 0; i < (*record)->E; i++)
+	if ((*record)->edges == NULL)
 	{
-		int s, e;
-		file >> s;
-		file >> e;
-		setupEdge(&(*record)->edges[i], s, e);
-	}
+		file.close();
+		free((*record)->vertexes);
+		return ERROR_BAD_ALLOC;
+	}			
+	ReadEdges(file, (*record)->edges, (*record)->E);
 
 	file.close();
 	return 0;
@@ -145,34 +165,32 @@ void Scale(FrameModel *record, double scale)
 	}
 }
 
-Vertex3D GetRotation(TransformProps *props)
+Vertex3D GetRotation(const TransformProps *props)
 {
 	return props->Rotation;
 }
 
-Vertex3D GetTranslation(TransformProps *props)
+Vertex3D GetTranslation(const TransformProps *props)
 {
 	return props->Translation;
 }
 
-double GetScale(TransformProps *props)
+double GetScale(const TransformProps *props)
 {
 	return props->scale;
 }
 
 // Применяет трансформации и конструирует проекцию по результату
-void Construct(FrameModel *record, Image2D* img, TransformProps *props)
+int Construct(FrameModel *record, Image2D* img, const TransformProps *props)
 {
 	if (record == NULL)
-		return;
+		return ERROR_BAD_ALLOC;
 	if (record->vertexes == NULL)
-		return;
+		return ERROR_BAD_ALLOC;
 
-	img->vertexCount = record->N;
-	img->edgesCount = record->E;
-
-	img->points = (Vertex2D*)malloc(sizeof(Vertex2D)*record->N);
-	img->edges = (Edge*)malloc(sizeof(Edge)*record->E);
+	int err = init_image(img, record->N, record->E);
+	if (err == ERROR_IMG_BAD_ALLOC)
+		return ERROR_BAD_ALLOC;
 
 	Vertex3D rot = GetRotation(props);
 	Vertex3D tran = GetTranslation(props);
@@ -194,8 +212,8 @@ void Construct(FrameModel *record, Image2D* img, TransformProps *props)
 
 	for (int i = 0; i < record->E; i++)
 	{
-		int start = getEdgeStart(record->edges[i]);
-		int end = getEdgeEnd(record->edges[i]);
+		int start = getEdgeStart(&(record->edges[i]));
+		int end = getEdgeEnd(&(record->edges[i]));
 		setupEdge(&(img->edges[i]), start, end);
 	}
 }

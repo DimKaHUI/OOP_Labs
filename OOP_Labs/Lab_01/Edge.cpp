@@ -7,12 +7,12 @@ void setupEdge(Edge *edge, int s, int e)
 	edge->end_index = e;
 }
 
-int getEdgeStart(Edge edge)
+int getEdgeStart(Edge *edge)
 {
-	return edge.start_index;
+	return edge->start_index;
 }
 
-int getEdgeEnd(Edge edge)
+int getEdgeEnd(Edge *edge)
 {
-	return edge.end_index;
+	return edge->end_index;
 }

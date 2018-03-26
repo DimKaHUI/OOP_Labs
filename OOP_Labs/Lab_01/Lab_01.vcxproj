@@ -96,6 +96,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="strfuncs.cpp" />
+    <ClCompile Include="UserMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Edge.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="FrameMdlProjector.h" />
     <ClInclude Include="strfuncs.h" />
+    <ClInclude Include="UserMessage.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />

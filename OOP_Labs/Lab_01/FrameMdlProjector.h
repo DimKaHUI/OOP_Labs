@@ -12,6 +12,7 @@
 #define ERROR_NO_SUCH_FILE -111
 #define ERROR_FILE_PARSING -112
 #define ERROR_BAD_ALLOC -113
+#define ERROR_NO_DATA -114
 
 #define DEG2RAD M_PI / 180
 
@@ -46,7 +47,7 @@ typedef struct TransformProps
 int MdlParseFile(FrameModel **record, char *filename);
 
 // Конструирование изображения 
-void Construct(FrameModel *record, Image2D *img, TransformProps *props);
+int Construct(FrameModel *record, Image2D *img, const TransformProps *props);
 
 // Освобождение памяти из-под модели
 void DisposeFrameModel(FrameModel *record);
