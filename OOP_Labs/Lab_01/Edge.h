@@ -9,6 +9,6 @@ typedef struct Edge
 
 void setupEdge(Edge *edge, int s, int e);
 
-int getEdgeStart(Edge *edge);
+int getEdgeStart(const Edge *edge);
 
-int getEdgeEnd(Edge *edge);
+int getEdgeEnd(const Edge *edge);

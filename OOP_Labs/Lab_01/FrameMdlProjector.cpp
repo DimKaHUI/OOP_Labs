@@ -14,17 +14,17 @@ void setupVertex3D(Vertex3D *v, float x, float y, float z)
 	v->z = z;
 }
 
-float getVertex3DX(FrameModel *mdl, int ind)
+float getVertex3DX(const FrameModel *mdl, int ind)
 {
 	Vertex3D v = mdl->vertexes[ind];
 	return v.x;
 }
-float getVertex3DY(FrameModel *mdl, int ind)
+float getVertex3DY(const FrameModel *mdl, int ind)
 {
 	Vertex3D v = mdl->vertexes[ind];
 	return v.y;
 }
-float getVertex3DZ(FrameModel *mdl, int ind)
+float getVertex3DZ(const FrameModel *mdl, int ind)
 {
 	Vertex3D v = mdl->vertexes[ind];
 	return v.z;
@@ -82,6 +82,7 @@ int MdlParseFile(FrameModel **record, char *filename)
 	if ((*record)->vertexes == NULL)
 	{
 		file.close();
+		free(*record);
 		return ERROR_BAD_ALLOC;
 	}	
 	ReadVertexes(file, (*record)->vertexes, (*record)->N);
@@ -93,12 +94,13 @@ int MdlParseFile(FrameModel **record, char *filename)
 	{
 		file.close();
 		free((*record)->vertexes);
+		free(*record);
 		return ERROR_BAD_ALLOC;
 	}			
 	ReadEdges(file, (*record)->edges, (*record)->E);
 
 	file.close();
-	return 0;
+	return OK_PROJ;
 }
 
 // Вращает модель
@@ -119,7 +121,7 @@ void Rotate(FrameModel *rec, float ax, float ay, float az)
 
 		setupVertex3D(&(rec->vertexes[i]), x, y, z);
 
-		x = getVertex3DX(rec, i) *cos(ay) + getVertex3DZ(rec, i) * sin(ay);
+		x = getVertex3DX(rec, i) * cos(ay) + getVertex3DZ(rec, i) * sin(ay);
 		z = -getVertex3DX(rec, i) * sin(ay) + getVertex3DZ(rec, i) * cos(ay);
 
 		setupVertex3D(&(rec->vertexes[i]), x, y, z);

@@ -7,12 +7,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define RELATIVE_TRANSFORMATION
-
 #define ERROR_NO_SUCH_FILE -111
 #define ERROR_FILE_PARSING -112
 #define ERROR_BAD_ALLOC -113
 #define ERROR_NO_DATA -114
+#define OK_PROJ -115
 
 #define DEG2RAD M_PI / 180
 
@@ -54,6 +53,6 @@ void DisposeFrameModel(FrameModel *record);
 
 void setupVertex3D(Vertex3D *v, float x, float y, float z);
 
-float getVertex3DX(FrameModel *mdl, int ind);
-float getVertex3DY(FrameModel *mdl, int ind);
-float getVertex3DZ(FrameModel *mdl, int ind);
+float getVertex3DX(const FrameModel *mdl, int ind);
+float getVertex3DY(const FrameModel *mdl, int ind);
+float getVertex3DZ(const FrameModel *mdl, int ind);

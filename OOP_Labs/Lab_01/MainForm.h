@@ -10,7 +10,6 @@
 #define LABEL_FONT_SIZE 14
 #define LABEL_FONT_NAME "Arial"
 #define LABEL_COLOR Color::LightGray
-#define DRAW_LABELS
 #define VERTEX_COLOR Color::Red
 #define EDGE_COLOR Color::Black
 #define ERROR_USER_DATA -111

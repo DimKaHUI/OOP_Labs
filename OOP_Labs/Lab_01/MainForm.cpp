@@ -146,7 +146,6 @@ namespace WinFormsTemplate
 	{
 		if (model == NULL)
 		{
-			ShowMessage("Error: Model not loaded");
 			return ERROR_NO_DATA;
 		}
 
@@ -172,8 +171,16 @@ namespace WinFormsTemplate
 	{
 		String ^path = PathBox->Text;
 		char *path_c = str2char(path);
+		if (path_c == NULL)
+		{
+			ShowMessage("String data allocated badly");
+			return NULL;
+		}
 		FrameModel *record = NULL;
 		int error = MdlParseFile(&record, path_c);
+
+		free(path_c);
+
 		switch (error)
 		{
 		case ERROR_BAD_ALLOC:
@@ -188,8 +195,7 @@ namespace WinFormsTemplate
 			ShowMessage("No such file");
 			record = NULL;
 			break;
-		}
-		free(path_c);
+		}		
 		return record;
 	}
 
@@ -207,10 +213,12 @@ namespace WinFormsTemplate
 			switch (err)
 			{
 			case ERROR_BAD_ALLOC:
-				ShowMessage("Bad memory allocation");
+				ShowMessage("Error: Bad memory allocation");
+				break;
+			case ERROR_NO_DATA:
+				ShowMessage("Error: Model not loaded");
 				break;
 			}
-
 		}
 	}
 }
