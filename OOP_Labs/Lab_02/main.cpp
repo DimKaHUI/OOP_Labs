@@ -112,5 +112,22 @@ int main()
 		equal_c <<
 		endl;
 
+	// Operations with empty sets
+	cout << endl;
+	set += empty1;	
+	cout << set.to_string();
+	cout << endl;
+	set -= empty1;
+	cout << set.to_string();
+	cout << endl;
+	set *= empty1;
+	cout << set.to_string();
+	cout << endl;
+
+	set += other;
+	cout << set.to_string();
+	cout << endl;
+
+
 	_getch();
 }
