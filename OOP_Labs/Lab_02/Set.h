@@ -53,12 +53,12 @@ namespace Util
 				this->data_[i] = obj.data_[i];
 		}
 
-		/*Set(Set&& obj)
+		Set(Set&& obj)
 		{
 			data_ = obj.data_;
 			length_ = obj.length_;
-		}*/
-		
+		}
+	
 		Set()
 		{
 			length_ = 0;
@@ -85,6 +85,11 @@ namespace Util
 			return true;
 		}
 
+		bool operator!=(const Set& other) const
+		{
+			return !(*this == other);
+		}
+
 		// Объединение множеств
 		void operator+=(const Set& other)
 		{
@@ -97,21 +102,21 @@ namespace Util
 			add(element);
 		}	
 
-		Set operator +(const Set& b)
+		Set operator +(const Set& b) const
 		{
 			Set<T> united = Set<T>(*this);
 			united += b;
 			return united;
 		}
 
-		Set operator *(const Set& b)
+		Set operator *(const Set& b) const
 		{
 			Set<T> res = Set(*this);
 			res *= b;
 			return res;
 		}
 
-		Set operator -(const Set& b)
+		Set operator -(const Set& b) const 
 		{
 			Set<T> res = Set(*this);
 			res -= b;
@@ -205,7 +210,7 @@ namespace Util
 			return arr;
 		}
 
-		Set<int> clone()
+		Set<int> clone() const
 		{
 			return Set<int>(*this);
 		}
