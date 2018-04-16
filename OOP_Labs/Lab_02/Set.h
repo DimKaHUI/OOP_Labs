@@ -14,35 +14,8 @@ namespace Util
 	public:
 		Set(const T *elements, int count)
 		{
-			int actualLength = count;
-			T *temp = new T[count];
-			int tempIndex = 0;
 			for (int i = 0; i < count; i++)
-			{
-				bool exists = false;
-				for (int j = 0; j < tempIndex; j++)
-				if (temp[j] == elements[i])
-				{
-					exists = true;
-					break;
-				}
-				if (!exists)
-				{
-					temp[tempIndex] = elements[i];
-					tempIndex++;
-				}
-				else
-					actualLength--;
-			}
-
-			data_ = new T[actualLength];
-			for (int i = 0; i < actualLength; i++)
-			{
-				data_[i] = temp[i];
-			}
-			length_ = actualLength;
-
-			delete[] temp;
+				add(elements[i]);
 		}
 
 		Set(const Set<T>& obj)
@@ -102,25 +75,25 @@ namespace Util
 			add(element);
 		}	
 
-		Set operator +(const Set& b) const
+		Set& operator +(const Set& b) const
 		{
-			Set<T> united = Set<T>(*this);
-			united += b;
-			return united;
+			Set<T> *united = new Set<T>(*this);
+			*united += b;
+			return *united;
 		}
 
-		Set operator *(const Set& b) const
+		Set& operator *(const Set& b) const
 		{
-			Set<T> res = Set(*this);
-			res *= b;
-			return res;
+			Set<T> *res = new Set(*this);
+			*res *= b;
+			return *res;
 		}
 
-		Set operator -(const Set& b) const 
+		Set& operator -(const Set& b) const 
 		{
-			Set<T> res = Set(*this);
-			res -= b;
-			return res;
+			Set<T> *res = new Set(*this);
+			*res -= b;
+			return *res;
 		}
 
 		// Разность множеств

@@ -27,6 +27,7 @@ int main()
 	Set<int> other_a = Set<int>(arr_a, 3);
 	set += other_a;
 	delete[] arr_a;
+	arr_a = nullptr;
 	cout << set.to_string() << endl;
 
 	// Test 3b: Union. +
@@ -35,13 +36,9 @@ int main()
 
 	Set<int> united = set + other;
 	delete[] arr_b;
+	arr_b = nullptr;
 
-	cout << set.to_string() << 
-		" + " << 
-		other.to_string() <<
-		" = " <<
-		united.to_string() <<
-		endl;
+	cout << set.to_string() << 	" + " << other.to_string() << " = " <<	united.to_string() << endl;
 
 
 	// Test 4a. Intersection. *=
@@ -50,6 +47,7 @@ int main()
 	cout << set.to_string() << " *= " << other4_a.to_string() << " == ";
 	set *= other4_a;
 	delete[] arr4_a;
+	arr4_a = nullptr;
 	cout << set.to_string() << endl;
 
 	// Test 4b. Intersection. *
@@ -61,6 +59,7 @@ int main()
 	cout << set.to_string() << " * " << other4_b.to_string() << " = ";
 	Set<int> intersetion = set * other4_b;
 	delete[] arr4_b;
+	arr4_b = nullptr;
 	cout << intersetion.to_string() << endl;
 
 	// Test 5a. Bisection. -=
@@ -69,6 +68,7 @@ int main()
 	cout << set.to_string() << " -= " << other5_a.to_string() << " == ";
 	set -= other5_a;
 	delete[] arr5_a;
+	arr5_a = nullptr;
 	cout << set.to_string() << endl;
 
 	// Test 5b. Bisection. -
@@ -80,6 +80,7 @@ int main()
 	cout << set.to_string() << " - " << other4_b.to_string() << " = ";
 	Set<int> bis = set - other4_b;
 	delete[] arr5_b;
+	arr5_b = nullptr;
 	cout << bis.to_string() << endl;
 
 	// Test 6a. Comparing different
