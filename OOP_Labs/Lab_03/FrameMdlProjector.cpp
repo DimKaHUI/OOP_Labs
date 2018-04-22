@@ -8,27 +8,20 @@
 #include "FrameMdlProjector.h"
 #include "Exceptions.h"
 
-void setupVertex3D(Vertex3D *v, float x, float y, float z)
+float FrameModel::getVertexX(int ind) const
 {
-	v->x = x;
-	v->y = y;
-	v->z = z;
+	Vertex3D v = vertexes[ind];
+	return v.getX();
 }
-
-float getVertex3DX(const FrameModel *mdl, int ind)
+float FrameModel::getVertexY(int ind) const
 {
-	Vertex3D v = mdl->vertexes[ind];
-	return v.x;
+	Vertex3D v = vertexes[ind];
+	return v.getY();
 }
-float getVertex3DY(const FrameModel *mdl, int ind)
+float FrameModel::getVertexZ(int ind) const
 {
-	Vertex3D v = mdl->vertexes[ind];
-	return v.y;
-}
-float getVertex3DZ(const FrameModel *mdl, int ind)
-{
-	Vertex3D v = mdl->vertexes[ind];
-	return v.z;
+	Vertex3D v = vertexes[ind];
+	return v.getZ();
 }
 
 void ReadVertexes(std::ifstream &file, Vertex3D *verts, int n)
@@ -39,7 +32,8 @@ void ReadVertexes(std::ifstream &file, Vertex3D *verts, int n)
 		file >> x;
 		file >> y;
 		file >> z;
-		setupVertex3D(&verts[i], x, y, z);
+		//setupVertex3D(&verts[i], x, y, z);
+		verts[i] = Vertex3D(x, y, z);
 	}
 }
 
@@ -55,117 +49,119 @@ void ReadEdges(std::ifstream &file, Edge *edges, int n)
 	}
 }
 
-// Загружает информацию о каркасной модели из указанного файла
-int MdlParseFile(FrameModel **record, char *filename)
+FrameModel::FrameModel()
 {
-	if (*record != NULL)
-	{
-		DisposeFrameModel(*record);
-		*record = NULL;
-	}
+	N = 0;
+	E = 0;
+	edges = nullptr;
+	vertexes = nullptr;
+}
 
+// Загружает информацию о каркасной модели из указанного файла
+FrameModel *FrameModel::MdlParseFile(char *filename)
+{
 	std::ifstream file = std::ifstream(filename);
 	if (file.is_open() == false)
 	{
-		return ERROR_NO_SUCH_FILE;
+		throw no_such_file();
 	}
-	*record = (FrameModel*)malloc(sizeof(FrameModel));
-	if (*record == NULL)
+
+	FrameModel *record = new FrameModel();
+
+	if (record == NULL)
 	{
 		file.close();
-		return ERROR_BAD_ALLOC;
+		throw bad_memory();
 	}
-	(*record)->vertexes = NULL;
-	(*record)->edges = NULL;
 	
 	// Reading vertexes
-	file >> (*record)->N;
-	(*record)->vertexes = (Vertex3D*)malloc(sizeof(Vertex3D)* (*record)->N);
-	if ((*record)->vertexes == NULL)
+	file >> (record)->N;
+	(record)->vertexes = new Vertex3D[record->N];
+	if ((record)->vertexes == nullptr)
 	{
 		file.close();
-		free(*record);
-		return ERROR_BAD_ALLOC;
+		delete record;
+		throw bad_memory();
 	}	
-	ReadVertexes(file, (*record)->vertexes, (*record)->N);
+	ReadVertexes(file, (record)->vertexes, (record)->N);
 
 	// Reading edges
-	file >> (*record)->E;
-	(*record)->edges = (Edge*)malloc(sizeof(Edge)* (*record)->E);
-	if ((*record)->edges == NULL)
+	file >> (record)->E;
+	(record)->edges = new Edge[record->E];
+	if ((record)->edges == NULL)
 	{
 		file.close();
-		free((*record)->vertexes);
-		free(*record);
-		return ERROR_BAD_ALLOC;
+		//free((record)->vertexes);
+		delete[] record->vertexes;
+		//free(*record);
+		delete record;
+		throw bad_memory();
 	}			
-	ReadEdges(file, (*record)->edges, (*record)->E);
+	ReadEdges(file, (record)->edges, (record)->E);
 
 	file.close();
-	return OK_PROJ;
+	return record;
 }
 
 // Вращает модель
-void Rotate(FrameModel *rec, float ax, float ay, float az)
+void FrameModel::Rotate(float ax, float ay, float az)
 {
-	if (rec == NULL)
+	if (vertexes == NULL)
 		return;
-	if (rec->vertexes == NULL)
-		return;
-	for (int i = 0; i < rec->N; i++)
+	for (int i = 0; i < N; i++)
 	{		
-		double x = getVertex3DX(rec, i);
-		double y = getVertex3DY(rec, i);
-		double z = getVertex3DZ(rec, i);
+		double x = getVertexX(i);//getVertex3DX(rec, i);
+		double y = getVertexY(i);
+		double z = getVertexZ(i);
 
-		y = getVertex3DY(rec, i) * cos(ax) - getVertex3DZ(rec, i) * sin(ax);
-		z = getVertex3DY(rec, i) * sin(ax) + getVertex3DZ(rec, i) * cos(ax);
+		y = getVertexY(i) * cos(ax) - getVertexZ(i) * sin(ax);
+		z = getVertexY(i) * sin(ax) + getVertexZ(i) * cos(ax);
 
-		setupVertex3D(&(rec->vertexes[i]), x, y, z);
+		//setupVertex3D(&(rec->vertexes[i]), x, y, z);
+		vertexes[i] = Vertex3D(x, y, z);
 
-		x = getVertex3DX(rec, i) * cos(ay) + getVertex3DZ(rec, i) * sin(ay);
-		z = -getVertex3DX(rec, i) * sin(ay) + getVertex3DZ(rec, i) * cos(ay);
+		x = getVertexX(i) * cos(ay) + getVertexZ(i) * sin(ay);
+		z = -getVertexX(i) * sin(ay) + getVertexZ(i) * cos(ay);
 
-		setupVertex3D(&(rec->vertexes[i]), x, y, z);
+		//setupVertex3D(&(rec->vertexes[i]), x, y, z);
+		vertexes[i] = Vertex3D(x, y, z);
 
-		x = getVertex3DX(rec, i) * cos(az) - getVertex3DY(rec, i) * sin(az);
-		y = getVertex3DX(rec, i) * sin(az) + getVertex3DY(rec, i) * cos(az);
+		x = getVertexX(i) * cos(az) - getVertexY(i) * sin(az);
+		y = getVertexX(i) * sin(az) + getVertexY(i) * cos(az);
 
-		setupVertex3D(&(rec->vertexes[i]), x, y, z);
+		vertexes[i] = Vertex3D(x, y, z);
 	}
 }
 
-void Translate(FrameModel *record, Vertex3D tran)
+void FrameModel::Translate(Vertex3D tran)
 {
-	if (record == NULL)
+	if (vertexes == nullptr)
 		return;
-	if (record->vertexes == NULL)
-		return;
-	for (int i = 0; i < record->N; i++)
+	for (int i = 0; i < N; i++)
 	{
 		float
-			x = getVertex3DX(record, i),
-			y = getVertex3DY(record, i),
-			z = getVertex3DZ(record, i);
-		setupVertex3D(&(record->vertexes[i]), x + tran.x, y + tran.y, z + tran.z);
+			x = getVertexX(i),
+			y = getVertexY(i),
+			z = getVertexZ(i);
+		//setupVertex3D(&(record->vertexes[i]), x + tran.x, y + tran.y, z + tran.z);
+		vertexes[i] = Vertex3D(x + tran.getX(), y + tran.getY(), z + tran.getZ());
 	}
 }
 
 
 // Однородно масштабирует модель
-void Scale(FrameModel *record, double scale)
+void FrameModel::Scale(double scale)
 {
-	if (record == NULL)
+	if (vertexes == NULL)
 		return;
-	if (record->vertexes == NULL)
-		return;
-	for (int i = 0; i < record->N; i++)
+	for (int i = 0; i < N; i++)
 	{
 		float 
-			x = getVertex3DX(record, i), 
-			y = getVertex3DY(record, i),
-			z = getVertex3DZ(record, i);
-		setupVertex3D(&(record->vertexes[i]), x * scale, y * scale, z * scale);
+			x = getVertexX(i), 
+			y = getVertexY(i),
+			z = getVertexZ(i);
+		//setupVertex3D(&(record->vertexes[i]), x * scale, y * scale, z * scale);
+		vertexes[i] = Vertex3D(x * scale, y * scale, z * scale);
 	}
 }
 
@@ -181,47 +177,45 @@ Vertex3D GetTranslation(const TransformProps *props)
 
 double GetScale(const TransformProps *props)
 {
-	return props->scale;
+	return props->Scale;
 }
 
 // Применяет трансформации и конструирует проекцию по результату
-Image2D *Construct(FrameModel *record, const TransformProps *props)
+Image2D* FrameModel::Construct(TransformProps *props)
 {
-	if (record == NULL)
-		throw bad_memory();
-	if (record->vertexes == NULL)
+	if (vertexes == nullptr)
 		throw bad_memory();
 
 	/*int err = init_image(img, record->N, record->E);
 	if (err == ERROR_IMG_BAD_ALLOC)
 		return ERROR_BAD_ALLOC;*/
 
-	Image2D *img = new Image2D(record->N, record->E);
+	Image2D *img = new Image2D(N, E);
 
 	Vertex3D rot = GetRotation(props);
 	Vertex3D tran = GetTranslation(props);
 	double scale = GetScale(props);
 
 	// Трансформирование
-	Rotate(record, DEG2RAD * rot.x, DEG2RAD * rot.y, DEG2RAD * rot.z);
-	Translate(record, tran);
-	Scale(record, scale);
+	Rotate(DEG2RAD * rot.getX(), DEG2RAD * rot.getY(), DEG2RAD * rot.getZ());
+	Translate(tran);
+	Scale(scale);
 
 	// Проецирование
-	for (int i = 0; i < record->N; i++)
+	for (int i = 0; i < N; i++)
 	{
-		float 
-		x = getVertex3DX(record, i), 
-		y = getVertex3DY(record, i);
+		float
+			x = getVertexX(i),
+			y = getVertexY(i);
 		//setupVertex2D(&(img->points[i]), x, y);
 		//img->points[i] = Vertex2D(x, y);
 		img->setVertex(i, x, y);
 	}
 
-	for (int i = 0; i < record->E; i++)
+	for (int i = 0; i < E; i++)
 	{
-		int start = record->edges[i].getEdgeStart();
-		int end = record->edges[i].getEdgeEnd();
+		int start = edges[i].getEdgeStart();
+		int end = edges[i].getEdgeEnd();
 		//img->edges[i] = Edge(start, end);
 		img->setEdge(i, start, end);
 	}
@@ -229,13 +223,12 @@ Image2D *Construct(FrameModel *record, const TransformProps *props)
 	return img;
 }
 
-void DisposeFrameModel(FrameModel *record)
+FrameModel::~FrameModel()
 {
-	if (record != NULL)
-	{
-		free(record->vertexes);
-		free(record->edges);
-		free(record);
-	}
-	record = NULL;
+	//free(vertexes);
+	delete[] vertexes;
+	//free(edges);
+	delete[] edges;
+	vertexes = nullptr;
+	edges = nullptr;
 }

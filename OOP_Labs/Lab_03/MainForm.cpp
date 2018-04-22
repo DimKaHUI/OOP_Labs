@@ -6,6 +6,7 @@
 #include "FrameMdlProjector.h"
 #include "strfuncs.h"
 #include "UserMessage.h"
+#include "Exceptions.h"
 
 namespace WinFormsTemplate
 {	
@@ -13,7 +14,7 @@ namespace WinFormsTemplate
 	// Получает данные пользователя
 	int MainForm::GetUserVals(Vertex3D *rot, Vertex3D *translate, double *scale)
 	{
-		Double angleX, angleY, angleZ, x, y, z;
+		double angleX, angleY, angleZ, x, y, z;
 		if (!Double::TryParse(X_TextBox->Text, angleX))
 		{
 			ShowMessage("I/O Error in X argument");
@@ -49,8 +50,8 @@ namespace WinFormsTemplate
 			ShowMessage("I/O Error in translation Z argument");
 			return ERROR_USER_DATA;
 		}
-		*rot = { angleX, angleY, angleZ };
-		*translate = { x, y, z };
+		*rot = { (float)angleX, (float)angleY, (float)angleZ };
+		*translate = { (float)x, (float)y, (float)z };
 		return OK;
 	}
 
@@ -157,7 +158,7 @@ namespace WinFormsTemplate
 			return err;
 		TransformProps props = { rot, translate, scale };		
 
-		Image2D *img = Construct(model, &props);		
+		Image2D *img = model->Construct(&props);		
 		Render(img);
 		img->~Image2D();
 	}
@@ -171,36 +172,40 @@ namespace WinFormsTemplate
 			ShowMessage("String data allocated badly");
 			return NULL;
 		}
-		FrameModel *record = NULL;
-		int error = MdlParseFile(&record, path_c);
 
-		free(path_c);
-
-		switch (error)
+		FrameModel *record;
+		try
 		{
-		case ERROR_BAD_ALLOC:
-			ShowMessage("Bad memory allocation");
-			record = NULL;
-			break;
-		case ERROR_FILE_PARSING:
-			ShowMessage("Bad file");
-			record = NULL;
-			break;
-		case ERROR_NO_SUCH_FILE:
-			ShowMessage("No such file");
-			record = NULL;
-			break;
-		}		
+			record = record->MdlParseFile(path_c);
+		}
+		finally
+		{
+			free(path_c);
+		}
 		return record;
 	}
 
 	System::Void MainForm::ProcessButton_Click(System::Object^  sender, System::EventArgs^  e)
 	{
-		static FrameModel *model = NULL;
+		static FrameModel *model = nullptr;
 		if (sender == (Object^)LoadButton)
 		{
-			DisposeFrameModel(model);
-			model = LoadFile();			
+			if (model != nullptr)
+				model->~FrameModel();// DisposeFrameModel(model);
+			try
+			{
+				model = LoadFile();
+			}			
+			catch (bad_memory& ex)
+			{
+				ShowMessage("Bad memory allocation");
+				model = nullptr;
+			}
+			catch (no_such_file& ex)
+			{
+				ShowMessage("Bad file");
+				model = nullptr;
+			}
 		}
 		else if (sender == (Object^)ProcessButton)
 		{

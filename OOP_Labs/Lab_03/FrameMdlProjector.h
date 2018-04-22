@@ -15,24 +15,70 @@
 
 #define DEG2RAD M_PI / 180
 
-typedef struct Vertex3D
+class Vertex3D
 {
 	float x, y, z;
-};
-
-typedef struct FrameModel
-{
-	int N;
-	Vertex3D *vertexes;
-	int E;
-	Edge *edges;
+public:
+	float getX()
+	{
+		return x;
+	}
+	float getY()
+	{
+		return y;
+	}
+	float getZ()
+	{
+		return z;
+	}
+	Vertex3D(float x, float y, float z)
+	{
+		this->x = x;
+		this->y = y;
+		this->z = z;
+	}
+	Vertex3D()
+	{
+		x = 0; y = 0; z = 0;
+	}
 };
 
 typedef struct TransformProps
 {
 	Vertex3D Rotation;
 	Vertex3D Translation;
-	double scale;
+	double Scale;
+};
+
+class FrameModel
+{
+	int N;
+	Vertex3D *vertexes;
+	int E;
+	Edge *edges;
+
+public:
+	int getN() const;
+	int getE() const;
+	Edge getEdge() const;
+	Vertex3D getVertex() const;
+	void setEdge(int i, int s, int e);
+	void setVertex(int i, float x, float y, float z);
+	FrameModel();
+	~FrameModel();
+
+	float getVertexX(int i) const;
+	float getVertexY(int i) const;
+	float getVertexZ(int i) const;
+
+	static FrameModel *MdlParseFile(char *filename);
+
+	void Rotate(float ax, float ay, float az);
+	void Translate(Vertex3D tran);
+	void Scale(double val);
+
+	Image2D *Construct(TransformProps *props);
+
 };
 
 /* Структура файла:
@@ -41,18 +87,3 @@ typedef struct TransformProps
  * int E - количество рёбер
  * int i, int j [Repeat E] - рёбра
  */
-
-// Считывание модели из файла
-int MdlParseFile(FrameModel **record, char *filename);
-
-// Конструирование изображения 
-Image2D *Construct(FrameModel *record, const TransformProps *props);
-
-// Освобождение памяти из-под модели
-void DisposeFrameModel(FrameModel *record);
-
-void setupVertex3D(Vertex3D *v, float x, float y, float z);
-
-float getVertex3DX(const FrameModel *mdl, int ind);
-float getVertex3DY(const FrameModel *mdl, int ind);
-float getVertex3DZ(const FrameModel *mdl, int ind);
