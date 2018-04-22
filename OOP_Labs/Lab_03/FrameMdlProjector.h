@@ -46,7 +46,7 @@ typedef struct TransformProps
 int MdlParseFile(FrameModel **record, char *filename);
 
 // Конструирование изображения 
-int Construct(FrameModel *record, Image2D *img, const TransformProps *props);
+Image2D *Construct(FrameModel *record, const TransformProps *props);
 
 // Освобождение памяти из-под модели
 void DisposeFrameModel(FrameModel *record);

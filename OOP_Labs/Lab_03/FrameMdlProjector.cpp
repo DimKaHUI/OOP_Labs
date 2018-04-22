@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include "FrameMdlProjector.h"
+#include "Exceptions.h"
 
 void setupVertex3D(Vertex3D *v, float x, float y, float z)
 {
@@ -184,16 +185,18 @@ double GetScale(const TransformProps *props)
 }
 
 // Применяет трансформации и конструирует проекцию по результату
-int Construct(FrameModel *record, Image2D* img, const TransformProps *props)
+Image2D *Construct(FrameModel *record, const TransformProps *props)
 {
 	if (record == NULL)
-		return ERROR_BAD_ALLOC;
+		throw bad_memory();
 	if (record->vertexes == NULL)
-		return ERROR_BAD_ALLOC;
+		throw bad_memory();
 
-	int err = init_image(img, record->N, record->E);
+	/*int err = init_image(img, record->N, record->E);
 	if (err == ERROR_IMG_BAD_ALLOC)
-		return ERROR_BAD_ALLOC;
+		return ERROR_BAD_ALLOC;*/
+
+	Image2D *img = new Image2D(record->N, record->E);
 
 	Vertex3D rot = GetRotation(props);
 	Vertex3D tran = GetTranslation(props);
@@ -210,15 +213,20 @@ int Construct(FrameModel *record, Image2D* img, const TransformProps *props)
 		float 
 		x = getVertex3DX(record, i), 
 		y = getVertex3DY(record, i);
-		setupVertex2D(&(img->points[i]), x, y);
+		//setupVertex2D(&(img->points[i]), x, y);
+		//img->points[i] = Vertex2D(x, y);
+		img->setVertex(i, x, y);
 	}
 
 	for (int i = 0; i < record->E; i++)
 	{
 		int start = record->edges[i].getEdgeStart();
 		int end = record->edges[i].getEdgeEnd();
-		img->edges[i] = Edge(start, end);
+		//img->edges[i] = Edge(start, end);
+		img->setEdge(i, start, end);
 	}
+
+	return img;
 }
 
 void DisposeFrameModel(FrameModel *record)

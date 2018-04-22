@@ -5,23 +5,35 @@
 #define OK_IMG 0
 #define ERROR_IMG_BAD_ALLOC -211
 
-typedef struct Vertex2D
+class Vertex2D
 {
 	int x, y;
+public:
+	int getX() const;
+	int getY() const;
+	Vertex2D(int x, int y);
 };
 
 
-typedef struct Image2D
+class Image2D
 {
+private:
 	int vertexCount;
 	int edgesCount;
 	Vertex2D *points;
 	Edge *edges;
-};
 
-void setupVertex2D(Vertex2D *vertex, int x, int y);
-Vertex2D getVertex(const Image2D *img, int ind);
-int getVertex2DX(const Image2D *img, int ind);
-int getVertex2DY(const Image2D *img, int ind);
-void free_image(Image2D *img);
-int init_image(Image2D *img, int n, int e);
+public:
+	int getVertexCount() const;
+	int getEdgesCount() const;
+	Edge getEdge(int ind) const;
+	void setEdge(int ind, int s, int e);
+	Vertex2D getVertex(int ind) const;
+	int getVertexX(int ind) const;
+	int getVertexY(int ind) const;
+	void setVertex(int ind, int x, int y);
+	Image2D(int n, int e);
+	Image2D();
+	~Image2D();
+	explicit Image2D(const Image2D&& obj);
+};

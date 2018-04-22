@@ -78,13 +78,12 @@ namespace WinFormsTemplate
 		Brush ^vertexBrush = gcnew SolidBrush(VERTEX_COLOR);
 		Brush ^brush = gcnew SolidBrush(EDGE_COLOR);
 		Pen ^pen = gcnew Pen(brush);
-		Vertex2D start, end;
 		int start_ind = edge->getEdgeStart();
 		int end_index = edge->getEdgeEnd();
-		int x1 = getVertex2DX(img, start_ind);
-		int y1 = getVertex2DY(img, start_ind);
-		int x2 = getVertex2DX(img, end_index);
-		int y2 = getVertex2DY(img, end_index);
+		int x1 = img->getVertexX(start_ind);//getVertex2DX(img, start_ind);
+		int y1 = img->getVertexY(start_ind);
+		int x2 = img->getVertexX(end_index);
+		int y2 = img->getVertexY(end_index);
 		gr->DrawLine(pen, x1, -y1, x2,	-y2);
 	}
 
@@ -122,15 +121,15 @@ namespace WinFormsTemplate
 		Brush ^vertexBrush = gcnew SolidBrush(VERTEX_COLOR);
 
 		// Drawing edges
-		for (int i = 0; i < img->edgesCount; i++)
-			DrawEdge(img, &(img->edges[i]));
+		for (int i = 0; i < img->getEdgesCount(); i++)
+			DrawEdge(img, &(img->getEdge(i)));
 
 		// Drawing verts
 		gr->TranslateTransform(getScrWidth() / 2, getScrHeight() / 2);
-		for (int i = 0; i < img->vertexCount; i++)
+		for (int i = 0; i < img->getVertexCount(); i++)
 		{
-			int x = getVertex2DX(img, i);
-			int y = getVertex2DY(img, i);
+			int x = img->getVertexX(i);
+			int y = img->getVertexY(i);
 
 			gr->FillEllipse(
 				vertexBrush,
@@ -158,13 +157,9 @@ namespace WinFormsTemplate
 			return err;
 		TransformProps props = { rot, translate, scale };		
 
-		Image2D img;
-
-		err = Construct(model, &img, &props);
-		if (err != OK)
-			return err;
-		
-		Render(&img);
+		Image2D *img = Construct(model, &props);		
+		Render(img);
+		img->~Image2D();
 	}
 
 	FrameModel *MainForm::LoadFile()
