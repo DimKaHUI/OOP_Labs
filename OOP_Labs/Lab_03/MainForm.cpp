@@ -79,8 +79,8 @@ namespace WinFormsTemplate
 		Brush ^brush = gcnew SolidBrush(EDGE_COLOR);
 		Pen ^pen = gcnew Pen(brush);
 		Vertex2D start, end;
-		int start_ind = edge->start_index;
-		int end_index = edge->end_index;
+		int start_ind = edge->getEdgeStart();
+		int end_index = edge->getEdgeEnd();
 		int x1 = getVertex2DX(img, start_ind);
 		int y1 = getVertex2DY(img, start_ind);
 		int x2 = getVertex2DX(img, end_index);

@@ -49,7 +49,8 @@ void ReadEdges(std::ifstream &file, Edge *edges, int n)
 		int s, e;
 		file >> s;
 		file >> e;
-		setupEdge(&edges[i], s, e);
+		//setupEdge(&edges[i], s, e);
+		edges[i] = Edge(s, e);
 	}
 }
 
@@ -214,9 +215,9 @@ int Construct(FrameModel *record, Image2D* img, const TransformProps *props)
 
 	for (int i = 0; i < record->E; i++)
 	{
-		int start = getEdgeStart(&(record->edges[i]));
-		int end = getEdgeEnd(&(record->edges[i]));
-		setupEdge(&(img->edges[i]), start, end);
+		int start = record->edges[i].getEdgeStart();
+		int end = record->edges[i].getEdgeEnd();
+		img->edges[i] = Edge(start, end);
 	}
 }
 

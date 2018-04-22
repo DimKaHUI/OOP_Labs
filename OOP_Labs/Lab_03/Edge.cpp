@@ -1,18 +1,18 @@
 #include "stdafx.h"
 #include "Edge.h"
 
-void setupEdge(Edge *edge, int s, int e)
+Edge::Edge(int s, int e)
 {
-	edge->start_index = s;
-	edge->end_index = e;
+	start_index = s;
+	end_index = e;
 }
 
-int getEdgeStart(const Edge *edge)
+int Edge::getEdgeStart() const
 {
-	return edge->start_index;
+	return start_index;
 }
 
-int getEdgeEnd(const Edge *edge)
+int Edge::getEdgeEnd() const
 {
-	return edge->end_index;
+	return end_index;
 }

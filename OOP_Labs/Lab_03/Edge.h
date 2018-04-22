@@ -1,14 +1,13 @@
 #pragma once
 #include "stdafx.h"
 
-typedef struct Edge
+class Edge
 {
 	int start_index;
 	int end_index;
+
+public:
+	Edge(int s, int e);
+	int getEdgeStart() const;
+	int getEdgeEnd() const;
 };
-
-void setupEdge(Edge *edge, int s, int e);
-
-int getEdgeStart(const Edge *edge);
-
-int getEdgeEnd(const Edge *edge);
