@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab_01", "Lab_01\Lab_01.vcxproj", "{3250D7B5-A5ED-4B27-AD44-84BC2A5CED6B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab_02", "Lab_02\Lab_02.vcxproj", "{E6E187E0-3318-4BDC-9277-2988C70553AE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab_03", "Lab_03\Lab_03.vcxproj", "{1262F49C-1253-4212-9E5E-44E8D8A79F0F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinFormsTemplate", "Lab_04\WinFormsTemplate.vcxproj", "{DE603FD5-951A-401F-9BA0-D4903A289758}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +29,15 @@ Global
 		{1262F49C-1253-4212-9E5E-44E8D8A79F0F}.Debug|Win32.Build.0 = Debug|Win32
 		{1262F49C-1253-4212-9E5E-44E8D8A79F0F}.Release|Win32.ActiveCfg = Release|Win32
 		{1262F49C-1253-4212-9E5E-44E8D8A79F0F}.Release|Win32.Build.0 = Release|Win32
+		{DE603FD5-951A-401F-9BA0-D4903A289758}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE603FD5-951A-401F-9BA0-D4903A289758}.Debug|Win32.Build.0 = Debug|Win32
+		{DE603FD5-951A-401F-9BA0-D4903A289758}.Release|Win32.ActiveCfg = Release|Win32
+		{DE603FD5-951A-401F-9BA0-D4903A289758}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {818990F3-AA00-4274-BDB8-3E5B5EF04D3C}
 	EndGlobalSection
 EndGlobal
