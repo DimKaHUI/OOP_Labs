@@ -1,63 +1,54 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 
 namespace Util
 {
+
+#define BLOCK_SIZE 16
+
+	class MemoryException : public std::exception
+	{
+	public:
+		static std::string what()
+		{
+			return "Bad alloc";
+		}
+	};
+
 	template<typename T>
 	class Set
 	{
 	private:
 		T *data_;
 		int length_;
+		int allocated = 0;
 	public:
 		Set(const T *elements, int count)
 		{
-			int actualLength = count;
-			T *temp = new T[count];
-			int tempIndex = 0;
+			data_ = nullptr;
+			length_ = 0;
 			for (int i = 0; i < count; i++)
 			{
-				bool exists = false;
-				for (int j = 0; j < tempIndex; j++)
-				if (temp[j] == elements[i])
-				{
-					exists = true;
-					break;
-				}
-				if (!exists)
-				{
-					temp[tempIndex] = elements[i];
-					tempIndex++;
-				}
-				else
-					actualLength--;
+				add( elements[i]);
 			}
-
-			data_ = new T[actualLength];
-			for (int i = 0; i < actualLength; i++)
-			{
-				data_[i] = temp[i];
-			}
-			length_ = actualLength;
-
-			delete[] temp;
 		}
 
 		Set(const Set<T>& obj)
 		{
 			this->length_ = obj.length_;
 			this->data_ = new T[obj.length_];
+			if (this->data_ == nullptr)
+				throw MemoryException();
 			for (int i = 0; i < this->length_; i++)
 				this->data_[i] = obj.data_[i];
 		}
 
-		/*Set(Set&& obj)
+		Set(Set&& obj)
 		{
 			data_ = obj.data_;
 			length_ = obj.length_;
-		}*/
+		}
 		
 		Set()
 		{
@@ -68,21 +59,20 @@ namespace Util
 		~Set()
 		{
 			delete[] data_;
+			data_ = nullptr;
 		}
 
 		// Сравнение множеств
 		bool operator==(const Set& other) const
 		{
-			if (length_ != other.length_)
+			bool equal = length_ == other.length_;
+			bool flag = false;
+			for (int i = 0; i < length_ && !flag; i++)
 			{
-				return false;
+				equal &= contains(other.data_[i]);
+				flag = true;
 			}
-			for (int i = 0; i < length_; i++)
-			if (!contains(other.data_[i]))
-			{
-				return false;
-			}
-			return true;
+			return equal;
 		}
 
 		// Объединение множеств
@@ -97,25 +87,25 @@ namespace Util
 			add(element);
 		}	
 
-		Set operator +(const Set& b)
+		Set operator +(const Set& b) const
 		{
 			Set<T> united = Set<T>(*this);
 			united += b;
-			return united;
+			return Set(united);
 		}
 
-		Set operator *(const Set& b)
+		Set operator *(const Set& b) const
 		{
 			Set<T> res = Set(*this);
 			res *= b;
-			return res;
+			return Set(res);
 		}
 
-		Set operator -(const Set& b)
+		Set operator -(const Set& b) const
 		{
 			Set<T> res = Set(*this);
 			res -= b;
-			return res;
+			return Set(res);
 		}
 
 		// Разность множеств
@@ -156,14 +146,24 @@ namespace Util
 			if (contains(element))
 				return;
 
-			T *tmp = new T[length_ + 1];
-			
-			for (int i = 0; i < length_; i++)
-				tmp[i] = data_[i];
-			tmp[length_] = element;
-
-			delete[] data_;
-			data_ = tmp;
+			if (length_ + 1 <= allocated)
+			{
+				data_[length_] = element;				
+			}
+			else
+			{
+				T *tmp = new T[allocated + BLOCK_SIZE];
+				if (tmp == nullptr)
+					throw MemoryException();
+				for (int i = 0; i < length_; i++)
+				{
+					tmp[i] = data_[i];
+				}
+				tmp[length_] = element;
+				delete[] data_;
+				data_ = tmp;
+				allocated += BLOCK_SIZE;				
+			}
 			length_++;
 		}
 
@@ -172,32 +172,49 @@ namespace Util
 			if (!contains(element))
 				return;
 
-			T* tmp = new T[length_ - 1];
-			for (int i = 0, t = 0; i < length_; i++)
+			if (length_ - 1 >= allocated - BLOCK_SIZE)
 			{
-				if (data_[i] != element)
+				for (int i = 0; i < length_; i++)
 				{
-					tmp[t] = data_[i];
-					t++;
-				}
+					if (data_[i] == element)
+					{
+						for (int k = i; k < allocated; k++)
+							data_[k] = data_[k] + 1;
+					}
+				}				
 			}
-
-			delete[] data_;
-			data_ = tmp;
+			else
+			{
+				T* tmp = new T[allocated - BLOCK_SIZE];
+				if (tmp == nullptr)
+					throw MemoryException();
+				int j = 0;
+				for (int i = 0; i < length_; i++)
+				{
+					if (data_[i] != element)
+					{
+						tmp[j] = data_[i];
+						j++;
+					}
+				}				
+			}
 			length_--;
 		}
 
 		bool contains(T element) const
 		{
-			for (int i = 0; i < length_; i++)
+			bool found = false;
+			for (int i = 0; i < length_ && !found; i++)
 			if (data_[i] == element)
-				return true;
-			return false;
+				found = true;
+			return found;
 		}
 
 		T *to_array() const
 		{
 			T *arr = new T[length_];
+			if (arr == nullptr)
+				throw MemoryException();
 			for (int i = 0; i < length_; i++)
 			{
 				arr[i] = data_[i];
@@ -205,9 +222,9 @@ namespace Util
 			return arr;
 		}
 
-		Set<int> clone()
+		Set<T> clone() const
 		{
-			return Set<int>(*this);
+			return Set<T>(*this);
 		}
 
 		
@@ -216,8 +233,7 @@ namespace Util
 			std::string res = "";
 			if (length_ == 0)
 			{
-				res += "(empty set)";
-				return res;
+				res += "(empty set)";				
 			}
 			for (int i = 0; i < length_; i++)
 			{
