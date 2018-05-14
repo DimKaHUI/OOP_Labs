@@ -1,39 +1,38 @@
 #include "stdafx.h"
 #include "Boiler.h"
 #include "StateVisualizer.h"
-#include "UserInterface.h"
 
 namespace BoilerImitator
 {
 	System::Void Boiler::Tick(System::Object ^ sender, System::EventArgs ^ e)
 	{
+		if (temp >= WATER_BOILING)
+		{
+			OnFinishEvent();
+		}
+
 		double delta = temp - chars->getRoomTemp();
 		if(delta > 0)
 		{
 			temp -= chars->getDec();
 		}
 		
-		if(isOn)
+		if (boilerState == Heating)
 		{
 			temp += chars->getInc();
-		}
-
-		if(temp >= WATER_BOILING)
-		{
-			OnFinishEvent();
-		}
+		}		
 
 		UpdateUi();
 	}
 	void Boiler::SetOn()
 	{
-		isOn = 1;
+		boilerState = Heating;
 		ledState = On;
 		coverLockState = Locked;
 	}
 	void Boiler::SetOff()
 	{
-		isOn = 0;
+		boilerState = Suspending;
 		ledState = Off;
 		coverLockState = Unlocked;
 	}
@@ -53,17 +52,18 @@ namespace BoilerImitator
 		this->chars = chars;
 		temp = chars->getRoomTemp();
 		coverState = Closed;
+		coverLockState = Unlocked;
+		ledState = Off;
+		boilerState = Suspending;
 
 		OnStartEvent += gcnew StartEvent(this, &Boiler::SetOn);
 		OnFinishEvent += gcnew FinishEvent(this, &Boiler::SetOff);
-		
-		OnFinishEvent();
 	}
 
 
 	System::Void Boiler::SwitchClick(System::Object ^ sender, System::EventArgs ^ e)
 	{
-		if(isOn == 0) // Turning on
+		if (boilerState == Suspending) // Turning on
 		{
 			if(coverState == Closed)
 			{

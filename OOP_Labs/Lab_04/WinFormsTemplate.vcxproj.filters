@@ -30,9 +30,6 @@
     <ClCompile Include="StateVisualizer.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="UserInterface.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
@@ -56,13 +53,13 @@
     <ClInclude Include="StateVisualizer.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="UserInterface.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="BoilerCharacteristics.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="WinFormVisualizer.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="States.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

@@ -94,7 +94,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UserInterface.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="WinFormVisualizer.cpp" />
   </ItemGroup>
@@ -105,9 +104,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="States.h" />
     <ClInclude Include="StateVisualizer.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="UserInterface.h" />
     <ClInclude Include="WinFormVisualizer.h" />
   </ItemGroup>
   <ItemGroup>
