@@ -20,7 +20,7 @@ namespace BoilerImitator
 
 		if(temp >= WATER_BOILING)
 		{
-			SetOff();
+			OnFinishEvent();
 		}
 
 		UpdateUi();
@@ -53,7 +53,11 @@ namespace BoilerImitator
 		this->chars = chars;
 		temp = chars->getRoomTemp();
 		coverState = Closed;
-		SetOff();
+
+		OnStartEvent += gcnew StartEvent(this, &Boiler::SetOn);
+		OnFinishEvent += gcnew FinishEvent(this, &Boiler::SetOff);
+		
+		OnFinishEvent();
 	}
 
 
@@ -63,12 +67,12 @@ namespace BoilerImitator
 		{
 			if(coverState == Closed)
 			{
-				SetOn();
+				OnStartEvent();
 			}
 		}
 		else
 		{
-			SetOff();
+			OnFinishEvent();
 		}
 	}
 	System::Void Boiler::CoverButtonClick(System::Object ^ sender, System::EventArgs ^ e)

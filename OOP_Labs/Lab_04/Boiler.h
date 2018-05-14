@@ -10,6 +10,13 @@ namespace BoilerImitator
 	ref class Boiler
 	{
 	private:
+
+		delegate void StartEvent();
+		delegate void FinishEvent();
+		
+		event StartEvent^ OnStartEvent;
+		event FinishEvent^ OnFinishEvent;
+
 		CoverState coverState = Closed;
 		CoverLockState coverLockState = Unlocked;
 		LedState ledState = Off;
