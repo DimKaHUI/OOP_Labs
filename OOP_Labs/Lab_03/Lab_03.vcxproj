@@ -109,7 +109,9 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="FrameMdlProjector.h" />
     <ClInclude Include="strfuncs.h" />
+    <ClInclude Include="TransformProps.h" />
     <ClInclude Include="UserMessage.h" />
+    <ClInclude Include="Vertex3D.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />

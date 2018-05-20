@@ -6,6 +6,8 @@
 #include "Image2D.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "Vertex3D.h"
+#include "TransformProps.h"
 
 #define ERROR_NO_SUCH_FILE -111
 #define ERROR_FILE_PARSING -112
@@ -14,41 +16,6 @@
 #define OK_PROJ -115
 
 #define DEG2RAD M_PI / 180
-
-class Vertex3D
-{
-	float x, y, z;
-public:
-	float getX()
-	{
-		return x;
-	}
-	float getY()
-	{
-		return y;
-	}
-	float getZ()
-	{
-		return z;
-	}
-	Vertex3D(float x, float y, float z)
-	{
-		this->x = x;
-		this->y = y;
-		this->z = z;
-	}
-	Vertex3D()
-	{
-		x = 0; y = 0; z = 0;
-	}
-};
-
-typedef struct TransformProps
-{
-	Vertex3D Rotation;
-	Vertex3D Translation;
-	double Scale;
-};
 
 class FrameModel
 {
