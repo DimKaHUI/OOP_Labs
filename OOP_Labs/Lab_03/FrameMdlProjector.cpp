@@ -57,6 +57,26 @@ FrameModel::FrameModel()
 	vertexes = nullptr;
 }
 
+int FrameModel::getN() const
+{
+	return N;
+}
+
+int FrameModel::getE() const
+{
+	return E;
+}
+
+Edge FrameModel::getEdge(int i) const
+{
+	return edges[i];
+}
+
+Vertex3D FrameModel::getVertex(int i) const
+{
+	return vertexes[i];
+}
+
 // Загружает информацию о каркасной модели из указанного файла
 FrameModel *FrameModel::MdlParseFile(char *filename)
 {
@@ -222,6 +242,7 @@ Image2D* FrameModel::Construct(TransformProps *props)
 
 	return img;
 }
+
 
 FrameModel::~FrameModel()
 {

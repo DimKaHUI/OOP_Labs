@@ -79,6 +79,7 @@ namespace WinFormsTemplate {
 	private: System::Windows::Forms::Label^  label8;
 	private: System::Windows::Forms::TextBox^  tranX_box;
 	private: System::Windows::Forms::Label^  label10;
+	private: System::Windows::Forms::Button^  PerimButt;
 
 
 	private:
@@ -115,6 +116,7 @@ namespace WinFormsTemplate {
 			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->tranX_box = (gcnew System::Windows::Forms::TextBox());
 			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->PerimButt = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->DrawingCanvas))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -321,11 +323,22 @@ namespace WinFormsTemplate {
 			this->label10->TabIndex = 20;
 			this->label10->Text = L"Translate";
 			// 
+			// PerimButt
+			// 
+			this->PerimButt->Location = System::Drawing::Point(11, 263);
+			this->PerimButt->Name = L"PerimButt";
+			this->PerimButt->Size = System::Drawing::Size(161, 23);
+			this->PerimButt->TabIndex = 21;
+			this->PerimButt->Text = L"Perimetr";
+			this->PerimButt->UseVisualStyleBackColor = true;
+			this->PerimButt->Click += gcnew System::EventHandler(this, &MainForm::ProcessButton_Click);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(655, 372);
+			this->Controls->Add(this->PerimButt);
 			this->Controls->Add(this->label10);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->tranZ_box);

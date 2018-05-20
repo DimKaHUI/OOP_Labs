@@ -7,6 +7,7 @@
 #include "strfuncs.h"
 #include "UserMessage.h"
 #include "Exceptions.h"
+#include "PerimetrCounter.h"
 
 namespace WinFormsTemplate
 {	
@@ -177,6 +178,8 @@ namespace WinFormsTemplate
 		try
 		{
 			record = record->MdlParseFile(path_c);
+			//record = FrameModel::getInstance();
+			//record->FromFile(path_c);
 		}
 		finally
 		{
@@ -218,6 +221,15 @@ namespace WinFormsTemplate
 			case ERROR_NO_DATA:
 				ShowMessage("Error: Model not loaded");
 				break;
+			}
+		}
+		else if(sender == (Object^)PerimButt)
+		{
+			if(model != nullptr)
+			{
+				PerimetrCounter* counter = new PerimetrCounter();
+				counter->SetComponent(model);
+				counter->operation();
 			}
 		}
 	}

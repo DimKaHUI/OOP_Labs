@@ -19,32 +19,41 @@
 
 class FrameModel
 {
+protected:
 	int N;
 	Vertex3D *vertexes;
 	int E;
 	Edge *edges;
 
 public:
+
+	static FrameModel *MdlParseFile(char *filename);
+
+	FrameModel();
+
 	int getN() const;
 	int getE() const;
-	Edge getEdge() const;
-	Vertex3D getVertex() const;
+	Edge getEdge(int i) const;
+	Vertex3D getVertex(int i) const;
 	void setEdge(int i, int s, int e);
 	void setVertex(int i, float x, float y, float z);
-	FrameModel();
+	
 	~FrameModel();
 
 	float getVertexX(int i) const;
 	float getVertexY(int i) const;
-	float getVertexZ(int i) const;
-
-	static FrameModel *MdlParseFile(char *filename);
+	float getVertexZ(int i) const;	
 
 	void Rotate(float ax, float ay, float az);
 	void Translate(Vertex3D tran);
 	void Scale(double val);
 
 	Image2D *Construct(TransformProps *props);
+
+	virtual void operation()
+	{
+		return;
+	}
 
 };
 
