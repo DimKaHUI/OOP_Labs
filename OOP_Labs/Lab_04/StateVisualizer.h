@@ -1,23 +1,9 @@
 #pragma once
 
+#include "States.h"
+
 namespace BoilerImitator
 {
-
-	enum CoverState
-	{
-		Closed, Opened
-	};
-
-	enum LedState
-	{
-		On, Off
-	};
-
-	enum CoverLockState
-	{
-		Locked, Unlocked
-	};
-
 	ref class StateVisualizer
 	{
 	public:

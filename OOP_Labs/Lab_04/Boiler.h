@@ -1,6 +1,5 @@
 #pragma once
 #include "StateVisualizer.h"
-#include "UserInterface.h"
 #include "BoilerCharacteristics.h"
 
 #define WATER_BOILING 100.0
@@ -10,9 +9,16 @@ namespace BoilerImitator
 	ref class Boiler
 	{
 	private:
-		CoverState coverState = Closed;
-		CoverLockState coverLockState = Unlocked;
-		LedState ledState = Off;
+
+		delegate void StartEvent();
+		delegate void FinishEvent();
+		
+		event StartEvent^ OnStartEvent;
+		event FinishEvent^ OnFinishEvent;
+
+		CoverState coverState;
+		CoverLockState coverLockState;
+		LedState ledState;
 		StateVisualizer^ visualizer;
 		BoilerCharacteristics^ chars;
 
@@ -21,8 +27,8 @@ namespace BoilerImitator
 		void SetOn();
 		void SetOff();
 
-		int isOn = false;
-		double temp = 25;
+		BoilerState boilerState;
+		double temp;
 		void UpdateUi();
 	public:
 		Boiler(BoilerImitator::StateVisualizer^ visualizer, System::Windows::Forms::Timer^ timer, BoilerCharacteristics^ chars);
