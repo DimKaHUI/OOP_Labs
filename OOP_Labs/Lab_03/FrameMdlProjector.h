@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef FRAME_MDL_H
+#define FRAME_MDL_H
+
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -63,3 +66,5 @@ public:
  * int E - количество рёбер
  * int i, int j [Repeat E] - рёбра
  */
+
+#endif

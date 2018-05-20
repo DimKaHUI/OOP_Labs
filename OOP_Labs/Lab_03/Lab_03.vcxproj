@@ -102,8 +102,10 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Decorator.h" />
     <ClInclude Include="Edge.h" />
+    <ClInclude Include="EdgeIterator.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Image2D.h" />
+    <ClInclude Include="Iterator.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
