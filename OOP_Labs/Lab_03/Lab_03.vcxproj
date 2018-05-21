@@ -97,6 +97,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="strfuncs.cpp" />
     <ClCompile Include="UserMessage.cpp" />
+    <ClCompile Include="WinFormModelViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />
@@ -117,6 +118,7 @@
     <ClInclude Include="TransformProps.h" />
     <ClInclude Include="UserMessage.h" />
     <ClInclude Include="Vertex3D.h" />
+    <ClInclude Include="WinFormModelViewer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
