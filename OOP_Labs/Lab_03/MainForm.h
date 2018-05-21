@@ -2,16 +2,9 @@
 
 #include <stdlib.h>
 #include "FrameMdlProjector.h"
+#include "WinFormModelViewer.h"
 
-#define POINT_SIZE 5
-#define POINT_SIZE_HALF 2
-#define X_LABEL_OFFSET -20
-#define Y_LABEL_OFFSET 10
-#define LABEL_FONT_SIZE 14
-#define LABEL_FONT_NAME "Arial"
-#define LABEL_COLOR Color::LightGray
-#define VERTEX_COLOR Color::Red
-#define EDGE_COLOR Color::Black
+
 #define ERROR_USER_DATA -111
 #define OK 0
 
@@ -372,28 +365,14 @@ namespace WinFormsTemplate {
 
 
 	private:
+
+		WinFormModelViewer^ Viewer = nullptr;
+
 		// Точка входа - обработ
 		System::Void ProcessButton_Click(System::Object^  sender, System::EventArgs^  e);
 
-		// Отображение проекции
-		int DrawProjection(FrameModel *model);
-
-		// Загрузка модели из файла
-		FrameModel* LoadFile();
-
 		// Считывание текстовых полей трансформации
 		int GetUserVals(Vertex3D *rot, Vertex3D *translate, double *scale);
-
-		void DrawEdge(const Image2D *img, const Edge *edge);
-
-		System::Drawing::Size getScrSize();
-
-		int getScrHeight();
-		int getScrWidth();
-
-		void DrawLabels();
-
-		void Render(const Image2D *img);
 };
 
 }

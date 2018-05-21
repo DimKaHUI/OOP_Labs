@@ -53,6 +53,8 @@ public:
 
 	Image2D *Construct(TransformProps *props);
 
+	Image2D *Construct();
+
 	virtual void operation()
 	{
 		return;

@@ -243,6 +243,35 @@ Image2D* FrameModel::Construct(TransformProps *props)
 	return img;
 }
 
+Image2D* FrameModel::Construct()
+{
+	if (vertexes == nullptr)
+		throw bad_memory();
+
+	Image2D *img = new Image2D(N, E);
+
+	// Проецирование
+	for (int i = 0; i < N; i++)
+	{
+		float
+			x = getVertexX(i),
+			y = getVertexY(i);
+		//setupVertex2D(&(img->points[i]), x, y);
+		//img->points[i] = Vertex2D(x, y);
+		img->setVertex(i, x, y);
+	}
+
+	for (int i = 0; i < E; i++)
+	{
+		int start = edges[i].getEdgeStart();
+		int end = edges[i].getEdgeEnd();
+		//img->edges[i] = Edge(start, end);
+		img->setEdge(i, start, end);
+	}
+
+	return img;
+}
+
 
 FrameModel::~FrameModel()
 {
