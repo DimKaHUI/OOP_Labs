@@ -109,6 +109,10 @@ namespace WinFormsTemplate
 				counter->SetComponent(Viewer->getModel());
 				counter->operation();
 			}
+			else
+			{
+				ShowMessage("Model not loaded");
+			}
 		}
 	}
 }

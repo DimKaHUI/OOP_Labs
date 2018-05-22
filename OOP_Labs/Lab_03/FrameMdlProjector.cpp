@@ -24,39 +24,6 @@ float FrameModel::getVertexZ(int ind) const
 	return v.getZ();
 }
 
-void ReadVertexes(std::ifstream &file, Vertex3D *verts, int n)
-{
-	for (int i = 0; i < n; i++)
-	{
-		int x, y, z;
-		file >> x;
-		file >> y;
-		file >> z;
-		//setupVertex3D(&verts[i], x, y, z);
-		verts[i] = Vertex3D(x, y, z);
-	}
-}
-
-void ReadEdges(std::ifstream &file, Edge *edges, int n)
-{
-	for (int i = 0; i < n; i++)
-	{
-		int s, e;
-		file >> s;
-		file >> e;
-		//setupEdge(&edges[i], s, e);
-		edges[i] = Edge(s, e);
-	}
-}
-
-FrameModel::FrameModel()
-{
-	N = 0;
-	E = 0;
-	edges = nullptr;
-	vertexes = nullptr;
-}
-
 int FrameModel::getN() const
 {
 	return N;
@@ -75,52 +42,6 @@ Edge FrameModel::getEdge(int i) const
 Vertex3D FrameModel::getVertex(int i) const
 {
 	return vertexes[i];
-}
-
-// Загружает информацию о каркасной модели из указанного файла
-FrameModel *FrameModel::MdlParseFile(char *filename)
-{
-	std::ifstream file = std::ifstream(filename);
-	if (file.is_open() == false)
-	{
-		throw no_such_file();
-	}
-
-	FrameModel *record = new FrameModel();
-
-	if (record == NULL)
-	{
-		file.close();
-		throw bad_memory();
-	}
-	
-	// Reading vertexes
-	file >> (record)->N;
-	(record)->vertexes = new Vertex3D[record->N];
-	if ((record)->vertexes == nullptr)
-	{
-		file.close();
-		delete record;
-		throw bad_memory();
-	}	
-	ReadVertexes(file, (record)->vertexes, (record)->N);
-
-	// Reading edges
-	file >> (record)->E;
-	(record)->edges = new Edge[record->E];
-	if ((record)->edges == NULL)
-	{
-		file.close();
-		//free((record)->vertexes);
-		delete[] record->vertexes;
-		//free(*record);
-		delete record;
-		throw bad_memory();
-	}			
-	ReadEdges(file, (record)->edges, (record)->E);
-
-	file.close();
-	return record;
 }
 
 // Вращает модель
@@ -281,4 +202,20 @@ FrameModel::~FrameModel()
 	delete[] edges;
 	vertexes = nullptr;
 	edges = nullptr;
+}
+
+FrameModel::FrameModel(int n, int e, Vertex3D *verts, Edge *edges)
+{
+	N = n;
+	E = e;
+	vertexes = verts;
+	this->edges = edges;
+}
+
+FrameModel::FrameModel()
+{
+	N = 0;
+	E = 0;
+	vertexes = nullptr;
+	this->edges = nullptr;
 }

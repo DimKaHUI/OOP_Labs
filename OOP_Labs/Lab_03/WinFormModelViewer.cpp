@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "WinFormModelViewer.h"
 #include "Vertex3D.h"
+#include "ModelBuilder.h"
 
 #define DEG2RAD M_PI / 180
 
@@ -23,9 +24,16 @@ char* WinFormModelViewer::str2char(String^ str)
 WinFormModelViewer::WinFormModelViewer(PictureBox^ targetCanvas, String^ modelSrc)
 {
 	char *fileName = str2char(modelSrc);
-	model = FrameModel::MdlParseFile(fileName);
+
+	//model = FrameModel::MdlParseFile(fileName);
+	model = ModelBuilder::FromFile(fileName);
 	DrawingCanvas = targetCanvas;
 	free(fileName);
+}
+
+WinFormModelViewer::WinFormModelViewer(PictureBox^ targetCanvas)
+{
+	DrawingCanvas = targetCanvas;
 }
 
 WinFormModelViewer::~WinFormModelViewer()
@@ -104,7 +112,7 @@ void WinFormModelViewer::DrawEdge(const Image2D *img, const Edge *edge)
 	Pen ^pen = gcnew Pen(brush);
 	int start_ind = edge->getEdgeStart();
 	int end_index = edge->getEdgeEnd();
-	int x1 = img->getVertexX(start_ind);//getVertex2DX(img, start_ind);
+	int x1 = img->getVertexX(start_ind);
 	int y1 = img->getVertexY(start_ind);
 	int x2 = img->getVertexX(end_index);
 	int y2 = img->getVertexY(end_index);

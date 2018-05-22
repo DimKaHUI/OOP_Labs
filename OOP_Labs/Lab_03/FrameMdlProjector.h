@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef FRAME_MDL_H
-#define FRAME_MDL_H
-
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -28,10 +25,9 @@ protected:
 	int E;
 	Edge *edges;
 
-public:
+public:	
 
-	static FrameModel *MdlParseFile(char *filename);
-
+	FrameModel(int n, int e, Vertex3D *verts, Edge *edges);
 	FrameModel();
 
 	int getN() const;
@@ -68,5 +64,3 @@ public:
  * int E - количество рёбер
  * int i, int j [Repeat E] - рёбра
  */
-
-#endif

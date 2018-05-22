@@ -23,10 +23,9 @@ using namespace System::Drawing;
 
 ref class WinFormModelViewer
 {
-private:
+protected:
 	PictureBox^ DrawingCanvas;
 	FrameModel *model;
-	Image2D *img;
 	static char* WinFormModelViewer::str2char(String^ str);
 
 	void Render(const Image2D *img);
@@ -38,6 +37,7 @@ private:
 	System::Drawing::Size WinFormModelViewer::getScrSize();
 
 public:
+	WinFormModelViewer(PictureBox^ targetCanvas);
 	WinFormModelViewer(PictureBox^ targetCanvas, String^ modelSrc);
 	~WinFormModelViewer();
 
@@ -47,6 +47,6 @@ public:
 
 	Image2D* getProjection();
 	FrameModel* getModel();
-	void Draw();
+	virtual void Draw();
 };
 

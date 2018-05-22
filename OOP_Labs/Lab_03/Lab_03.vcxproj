@@ -90,17 +90,16 @@
     <ClCompile Include="FrameMdlProjector.cpp" />
     <ClCompile Include="Image2D.cpp" />
     <ClCompile Include="MainForm.cpp" />
+    <ClCompile Include="ModelBuilder.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="strfuncs.cpp" />
     <ClCompile Include="UserMessage.cpp" />
     <ClCompile Include="WinFormModelViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Component.h" />
     <ClInclude Include="Decorator.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="EdgeIterator.h" />
@@ -110,11 +109,11 @@
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="ModelBuilder.h" />
     <ClInclude Include="PerimetrCounter.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="FrameMdlProjector.h" />
-    <ClInclude Include="strfuncs.h" />
     <ClInclude Include="TransformProps.h" />
     <ClInclude Include="UserMessage.h" />
     <ClInclude Include="Vertex3D.h" />

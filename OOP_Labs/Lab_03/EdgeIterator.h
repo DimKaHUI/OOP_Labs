@@ -26,11 +26,12 @@ public:
 	}
 
 	Edge Next() override
-	{
-		current++;
+	{		
 		if (current >= aggregator->getE())
 			throw index_out_of_range();
-		return aggregator->getEdge(current);
+		Edge res =  aggregator->getEdge(current);
+		current++;
+		return res;
 	}
 
 	Edge CurrentItem() override
